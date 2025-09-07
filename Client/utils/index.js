@@ -7,6 +7,7 @@ export function createPageUrl(name){
     FloorPlan: '/floorplan',
     Activities: '/activities',
     Maintenance: '/maintenance',
+    AddResident: '/add-resident',
     Meals: '/meals'
   }
   return map[name] || '/'

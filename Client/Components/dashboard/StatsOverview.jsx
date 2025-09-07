@@ -1,70 +1,104 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Users, Building, Calendar, Wrench } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import React from 'react';
+import { Users, Bed, Calendar, Wrench } from 'lucide-react';
 
-export default function StatsOverview({ stats, isLoading }) {
-  const statItems = [
+const StatCard = ({ title, value, total, subtext, icon, bgColor, gradient }) => (
+  <div
+    style={{
+      background: '#fff',
+      borderRadius: '1rem',
+      boxShadow: '0 8px 32px 0 rgba(60,72,100,0.10)',
+      border: '1px solid #e6eef8',
+      padding: '1.5rem',
+      display: 'flex',
+      alignItems: 'center',
+      flex: 1,
+      minWidth: 0,
+      transition: 'box-shadow 0.2s',
+      cursor: 'pointer',
+    }}
+    role="region"
+    aria-label={title}
+    onMouseEnter={e => e.currentTarget.style.boxShadow = '0 12px 36px 0 rgba(60,72,100,0.18)'}
+    onMouseLeave={e => e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(60,72,100,0.10)'}
+  >
+    <span style={{
+      fontSize: 28,
+      marginRight: 18,
+      background: gradient || bgColor,
+      borderRadius: '9999px',
+      width: 48,
+      height: 48,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: '0 2px 8px 0 rgba(60,72,100,0.10)',
+    }}>{React.cloneElement(icon, { size: 28, 'aria-hidden': true })}</span>
+    <div style={{flex:1}}>
+      <div style={{fontSize:'1rem',fontWeight:600,color:'#374151',marginBottom:8}}>{title}</div>
+      <div style={{fontSize:'2rem',fontWeight:700,color:'#0f172a',marginTop:2}}>
+        {value}
+        {total && <span style={{color:'#9ca3af',fontSize:'1.125rem',fontWeight:500}}>/ {total}</span>}
+      </div>
+      {subtext && <div style={{fontSize:'0.85rem',color:'#6b7280',marginTop:4}}>{subtext}</div>}
+    </div>
+  </div>
+);
+
+export default function StatsOverview() {
+  const stats = [
     {
-      title: "Total Residents",
-      value: stats.totalResidents,
-      max: 20,
-      icon: Users,
-      bgColor: "bg-blue-500",
-      description: "Currently housed"
+      title: 'Total Residents',
+      value: '5',
+      total: '20',
+      subtext: 'Currently housed',
+      icon: <Users className="text-blue-500" />,
+      bgColor: '#eff6ff',
+      gradient: 'linear-gradient(135deg,#6366f1 0%,#60a5fa 100%)',
     },
     {
-      title: "Room Occupancy",
-      value: `${stats.occupiedRooms}/${stats.totalRooms}`,
-      icon: Building,
-      bgColor: "bg-green-500",
-      description: "Rooms occupied"
+      title: 'Room Occupancy',
+      value: '4',
+      total: '6',
+      subtext: 'Rooms occupied',
+      icon: <Bed className="text-emerald-500" />,
+      bgColor: '#f0fdf4',
+      gradient: 'linear-gradient(135deg,#34d399 0%,#6ee7b7 100%)',
     },
     {
-      title: "Upcoming Activities",
-      value: stats.upcomingActivities,
-      icon: Calendar,
-      bgColor: "bg-purple-500",
-      description: "This week"
+      title: 'Upcoming Activities',
+      value: '0',
+      subtext: 'This week',
+      icon: <Calendar className="text-purple-500" />,
+      bgColor: '#faf5ff',
+      gradient: 'linear-gradient(135deg,#a855f7 0%,#c4b5fd 100%)',
     },
     {
-      title: "Open Maintenance",
-      value: stats.openMaintenance,
-      icon: Wrench,
-      bgColor: "bg-orange-500",
-      description: "Requests pending"
-    }
+      title: 'Open Maintenance',
+      value: '2',
+      subtext: 'Requests pending',
+      icon: <Wrench className="text-orange-500" />,
+      bgColor: '#fff7ed',
+      gradient: 'linear-gradient(135deg,#f97316 0%,#fdba74 100%)',
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {statItems.map((item, index) => (
-        <Card key={index} className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-          <div className={`absolute top-0 right-0 w-24 h-24 transform translate-x-6 -translate-y-6 ${item.bgColor} rounded-full opacity-10`} />
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-600 mb-2">{item.title}</p>
-                {isLoading ? (
-                  <Skeleton className="h-8 w-16 mb-2" />
-                ) : (
-                  <h3 className="text-2xl font-bold text-gray-900 mb-1">
-                    {item.value}
-                    {item.max && (
-                      <span className="text-sm font-normal text-gray-500 ml-1">
-                        /{item.max}
-                      </span>
-                    )}
-                  </h3>
-                )}
-                <p className="text-xs text-gray-500">{item.description}</p>
-              </div>
-              <div className={`p-3 rounded-xl ${item.bgColor} bg-opacity-15`}>
-                <item.icon className={`w-5 h-5 ${item.bgColor.replace('bg-', 'text-')}`} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '24px',
+        width: '100%',
+        marginTop: '0',
+        marginBottom: '0',
+      }}
+      role="grid"
+      aria-label="Statistics Overview"
+    >
+      {stats.map((stat) => (
+        <div role="gridcell" key={stat.title} style={{flex: 1, minWidth: 0}}>
+          <StatCard {...stat} />
+        </div>
       ))}
     </div>
   );

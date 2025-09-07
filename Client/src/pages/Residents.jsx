@@ -1,11 +1,46 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 
-const sample = [
-  {id:1, name:'Robert Johnson', room:'1A', age:70, branch:'Army', status:'active', movedIn:'Aug 2023', tenure:'2 years, 1 months', emergency:'Mary Johnson', notes:'Diabetes Type 2 - requires regular monitoring'},
-  {id:2, name:'Patricia Williams', room:'1B', age:63, branch:'Navy', status:'active', movedIn:'Sep 2023', tenure:'2 years in facility', emergency:'David Williams', notes:'No major health issues'},
-  {id:4, name:'Michael Davis', room:'2A', age:69, branch:'Air Force', status:'active', movedIn:'Aug 2023', tenure:'2 years', emergency:'', notes:''},
-  {id:5, name:'Linda Brown', room:'2B', age:85, branch:'Marines', status:'active', movedIn:'Jul 2023', tenure:'2 years', emergency:'', notes:''},
-]
+const ROOM_STORAGE_KEY = 'vh_rooms_v1';
+const RESIDENT_STORAGE_KEY = 'vh_residents_v1';
+
+function getInitialRooms() {
+  // Always 20 rooms, numbered 1A, 1B, ... 2J
+  const rooms = [];
+  for (let i = 1; i <= 2; i++) {
+    for (let j = 0; j < 10; j++) {
+      const letter = String.fromCharCode(65 + j);
+      rooms.push({
+        id: i * 100 + j,
+        number: `${i}${letter}`,
+        type: 'Single',
+        capacity: 1,
+        occupied: false,
+      });
+    }
+  }
+  return rooms;
+}
+
+function getStoredRooms() {
+  try {
+    const raw = localStorage.getItem(ROOM_STORAGE_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      // Ensure always 20 rooms
+      if (arr.length === 20) return arr;
+    }
+  } catch {}
+  return getInitialRooms();
+}
+
+function getStoredResidents() {
+  try {
+    const raw = localStorage.getItem(RESIDENT_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return [];
+}
 
 function StatCard({title, value}){
   // Emoji and color mapping for each stat card
@@ -73,30 +108,123 @@ function ResidentCard({r}){
 }
 
 export default function Residents(){
+  const [rooms, setRooms] = useState(getStoredRooms());
+  const [residents, setResidents] = useState(getStoredResidents());
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ name:'', age:'', branch:'', emergency:'', notes:'' });
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(ROOM_STORAGE_KEY, JSON.stringify(rooms));
+  }, [rooms]);
+  useEffect(() => {
+    localStorage.setItem(RESIDENT_STORAGE_KEY, JSON.stringify(residents));
+  }, [residents]);
+
+  function handleFormChange(e){
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  }
+
+  function handleAddResident(e){
+    e.preventDefault();
+    // Find first available room
+    const availableRoom = rooms.find(r => !r.occupied);
+    if (!availableRoom) {
+      alert('No available rooms!');
+      return;
+    }
+    const newResident = {
+      id: Date.now(),
+      name: form.name,
+      room: availableRoom.number,
+      age: form.age,
+      branch: form.branch,
+      status: 'active',
+      movedIn: new Date().toLocaleString('default', { month: 'short', year: 'numeric' }),
+      tenure: 'New',
+      emergency: form.emergency,
+      notes: form.notes,
+    };
+    setResidents(prev => [newResident, ...prev]);
+    setRooms(prev => prev.map(r => r.id === availableRoom.id ? { ...r, occupied: true } : r));
+    setForm({ name:'', age:'', branch:'', emergency:'', notes:'' });
+    setShowForm(false);
+  }
+
+  const filteredResidents = residents.filter(r => {
+    const q = search.toLowerCase();
+    return (
+      (r.name && r.name.toLowerCase().includes(q)) ||
+      (r.room && r.room.toLowerCase().includes(q)) ||
+      (r.branch && r.branch.toLowerCase().includes(q))
+    );
+  });
+
   return (
-    <div className="page-content">
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
-        <div>
-          <h1 className="text-3xl font-bold">Residents</h1>
-          <p className="text-gray-600 mt-1">Manage veteran residents and their information</p>
+    <div style={{
+      minHeight:'100vh',
+      background:'linear-gradient(120deg,#f3f4f6 0%,#e0e7ff 100%)',
+      paddingBottom:'2.5rem',
+      paddingTop:'0px',
+      marginTop:'0px',
+    }}>
+      <div style={{maxWidth:1200,margin:'0 auto',padding:'0 2rem'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:28}}>
+          <div>
+            <h1 style={{
+              fontSize:'2.2rem',
+              fontWeight:800,
+              background:'linear-gradient(90deg,#6366f1 0%,#60a5fa 100%)',
+              WebkitBackgroundClip:'text',
+              WebkitTextFillColor:'transparent',
+              marginBottom:6,
+              letterSpacing:'-1px',
+            }}>Residents</h1>
+            <p style={{color:'#64748b',fontSize:'1.1rem',marginTop:2}}>Manage veteran residents and their information</p>
+          </div>
+          <div>
+            <button onClick={()=>navigate('/add-resident')} style={{
+              background:'linear-gradient(90deg,#6366f1 0%,#60a5fa 100%)',
+              color:'#fff',
+              fontWeight:700,
+              fontSize:'1rem',
+              border:'none',
+              borderRadius:10,
+              padding:'0.75rem 1.5rem',
+              boxShadow:'0 2px 8px 0 rgba(60,72,100,0.08)',
+              cursor:'pointer',
+              transition:'box-shadow 0.2s',
+            }}>+  Add New Resident</button>
+          </div>
         </div>
-        <div>
-          <button className="primary-btn">+  Add New Resident</button>
+
+
+
+        <div style={{marginBottom:24,display:'flex',gap:20}}>
+          <StatCard title="Active Residents" value={residents.length} />
+          <StatCard title="On Leave" value={0} />
+          <StatCard title="Total Residents" value={residents.length} />
         </div>
-      </div>
 
-      <div className="stats-row" style={{marginBottom:16, display:'flex', gap:20}}>
-        <StatCard title="Active Residents" value={5} />
-        <StatCard title="On Leave" value={0} />
-        <StatCard title="Total Residents" value={5} />
-      </div>
+        <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:18}}>
+          <input value={search} onChange={e=>setSearch(e.target.value)} style={{
+            flex:1,
+            padding:'0.85rem 1.2rem',
+            borderRadius:10,
+            border:'1px solid #e0e7ff',
+            fontSize:'1rem',
+            color:'#374151',
+            background:'#fff',
+            boxShadow:'0 2px 8px 0 rgba(60,72,100,0.04)',
+            outline:'none',
+            transition:'border 0.2s',
+          }} placeholder="Search residents by name, room, or service branch..." />
+        </div>
 
-      <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:14}}>
-        <input className="search-input" placeholder="Search residents by name, room, or service branch..." />
-      </div>
-
-      <div className="res-grid">
-        {sample.map(r=> <ResidentCard key={r.id} r={r} />)}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))',gap:24}}>
+          {filteredResidents.map(r=> <ResidentCard key={r.id} r={r} />)}
+        </div>
       </div>
     </div>
   )

@@ -127,3 +127,63 @@ main{flex:1;display:flex;flex-direction:column;background:transparent}
 /* Back-compat: keep the minimal font reset for elements that expect it */
 code,pre{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Helvetica Neue', monospace}
 
+/* Small extra utilities used by the in-repo components (lightweight replacements for a subset of Tailwind) */
+.input{
+	display:block;
+	width:100%;
+	padding:0.5rem 0.75rem;
+	border:1px solid var(--border);
+	border-radius:8px;
+	background:white;
+	box-sizing:border-box;
+}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:0.5rem 0.75rem;border-radius:8px;border:none;background:#eee;color:var(--text);cursor:pointer}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:white;box-shadow:0 6px 18px rgba(99,102,241,0.12)}
+
+.text-red-600{color:#dc2626}
+.text-green-600{color:#16a34a}
+
+/* replicate Tailwind-style hover:underline class used in JSX (escaped colon) */
+.hover\:underline:hover{text-decoration:underline}
+
+.rounded{border-radius:0.5rem}
+.border{border:1px solid var(--border)}
+.p-3{padding:0.75rem}
+.space-y-2 > * + *{margin-top:0.5rem}
+.gap-2{gap:0.5rem}
+.flex-col{flex-direction:column}
+.items-start{align-items:flex-start}
+.items-end{align-items:flex-end}
+.opacity-60{opacity:0.6}
+.line-through{text-decoration:line-through}
+
+/* Layout & spacing helpers used in Layout.jsx and dashboard components */
+.rounded-xl{border-radius:1rem}
+.shadow-sm{box-shadow:0 6px 20px rgba(15,23,42,0.04)}
+.bg-blue-50{background:#eef6ff}
+.border-gray-100{border-color:var(--border)}
+.mb-6{margin-bottom:1.5rem}
+.mt-6{margin-top:1.5rem}
+.gap-6{gap:1.5rem}
+.p-8{padding:2rem}
+.px-6{padding-left:1.5rem;padding-right:1.5rem}
+.py-4{padding-top:1rem;padding-bottom:1rem}
+.text-gray-600{color:#4b5563}
+
+/* Simple grid support and responsive helpers used in JSX classes */
+.grid{display:grid}
+.grid-cols-1{grid-template-columns:repeat(1,1fr)}
+.space-y-6 > * + *{margin-top:1.5rem}
+
+@media (min-width:1024px){
+	.lg\:grid-cols-3{grid-template-columns:repeat(3,1fr)}
+	.lg\:col-span-2{grid-column:span 2 / span 2}
+}
+
+/* Utility for max width used in layout (escape bracketed class name) */
+.max-w-\[1200px\]{max-width:1200px}
+
+
+

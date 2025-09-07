@@ -11,8 +11,7 @@ const ResidentSchema = new Schema({
   emergency_contact_phone: { type: String },
   medical_notes: { type: String },
   move_in_date: { type: Date },
-    move_in_date: { type: Date },
-    move_out_date: { type: Date },
+  move_out_date: { type: Date },
   status: { type: String, default: 'active' },
 })
 

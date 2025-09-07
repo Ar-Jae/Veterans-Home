@@ -1,92 +1,79 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Clock, Wrench, Building } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { format } from "date-fns";
+import React from 'react';
+import { Wrench } from 'lucide-react';
 
-const priorityColors = {
-  urgent: "bg-red-100 text-red-800 border-red-200",
-  high: "bg-orange-100 text-orange-800 border-orange-200",
-  medium: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  low: "bg-gray-100 text-gray-800 border-gray-200"
-};
 
-export default function MaintenanceAlerts({ requests, isLoading }) {
-  const sortedRequests = requests
-    .sort((a, b) => {
-      const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
-      return priorityOrder[a.priority] - priorityOrder[b.priority];
-    })
-    .slice(0, 5);
+export default function MaintenanceAlerts() {
+  const alerts = [
+    {
+      id: 1,
+      issue: 'HVAC Not Working',
+      location: 'Floor 1 - Lounge',
+      date: 'Sep 7',
+      priority: 'high',
+      details: 'Heating system not working properly in common lounge',
+    },
+    {
+      id: 2,
+      issue: 'Light Bulb Replacement',
+      location: 'Floor 2 - Hallway',
+      date: 'Sep 7',
+      priority: 'low',
+      details: 'Several light bulbs need replacement in hallway',
+    },
+  ];
 
   return (
-    <Card className="shadow-md">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Wrench className="w-5 h-5 text-orange-600" />
-          Maintenance Alerts
-          {requests.length > 0 && (
-            <Badge variant="secondary">{requests.length}</Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <div className="space-y-4">
-            {Array(3).fill(0).map((_, i) => (
-              <div key={i} className="space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-3 w-2/3" />
-              </div>
-            ))}
+    <div
+      style={{
+        background: '#fff',
+        borderRadius: '1rem',
+        boxShadow: '0 8px 32px 0 rgba(60,72,100,0.10)',
+        border: '1px solid #e6eef8',
+        padding: '1.5rem',
+        transition: 'box-shadow 0.2s',
+        marginBottom: '0.5rem',
+        position: 'relative',
+        cursor: 'pointer',
+        minWidth: 0,
+      }}
+      onMouseEnter={e => e.currentTarget.style.boxShadow = '0 12px 36px 0 rgba(60,72,100,0.18)'}
+      onMouseLeave={e => e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(60,72,100,0.10)'}
+    >
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:18}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <span style={{background:'linear-gradient(135deg,#f97316 0%,#fdba74 100%)',borderRadius:'9999px',width:32,height:32,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 8px 0 rgba(60,72,100,0.10)'}}>
+            <Wrench style={{color:'#fff'}} size={18} />
+          </span>
+          <h3 style={{fontWeight:600,fontSize:'1.1rem',color:'#374151'}}>Maintenance Alerts</h3>
+        </div>
+        <span style={{background:'#f3f4f6',color:'#374151',fontSize:'0.95rem',padding:'2px 10px',borderRadius:8,fontWeight:500}}>{alerts.length}</span>
+      </div>
+
+      <div style={{display:'flex',flexDirection:'column',gap:18}}>
+        {alerts.map(alert => (
+          <div key={alert.id} style={{background:'#f9fafb',borderRadius:12,padding:'1rem 1.2rem',boxShadow:'0 2px 8px 0 rgba(60,72,100,0.04)'}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+              <h4 style={{fontWeight:600,color:'#374151',fontSize:'1rem'}}>{alert.issue}</h4>
+              <span style={{
+                fontSize:'0.85rem',
+                padding:'2px 12px',
+                borderRadius:8,
+                fontWeight:600,
+                background: alert.priority==='high' ? 'linear-gradient(90deg,#fee2e2 0%,#fca5a5 100%)' : '#f3f4f6',
+                color: alert.priority==='high' ? '#b91c1c' : '#374151',
+                boxShadow: alert.priority==='high' ? '0 2px 8px 0 rgba(220,38,38,0.08)' : 'none',
+              }}>{alert.priority}</span>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:10,fontSize:'0.95rem',color:'#6b7280',marginBottom:4}}>
+              <span>{alert.location}</span>
+              <span style={{fontWeight:700}}>&bull;</span>
+              <span>{alert.date}</span>
+            </div>
+            <p style={{fontSize:'0.95rem',color:'#6b7280'}}>{alert.details}</p>
           </div>
-        ) : requests.length === 0 ? (
-          <div className="text-center py-6">
-            <AlertTriangle className="w-8 h-8 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 text-sm">No open maintenance requests</p>
-            <p className="text-xs text-gray-400 mt-1">All systems running smoothly!</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {sortedRequests.map((request, index) => (
-              <div key={index} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-medium text-sm text-gray-900 flex-1">
-                    {request.title}
-                  </h4>
-                  <Badge 
-                    className={`text-xs ${priorityColors[request.priority]} ml-2`}
-                    variant="outline"
-                  >
-                    {request.priority}
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-600">
-                  <Building className="w-3 h-3" />
-                  <span>{request.location}</span>
-                  <Clock className="w-3 h-3 ml-2" />
-                  <span>{format(new Date(request.created_date), "MMM d")}</span>
-                </div>
-                {request.description && (
-                  <p className="text-xs text-gray-500 mt-2 line-clamp-2">
-                    {request.description}
-                  </p>
-                )}
-              </div>
-            ))}
-            
-            {requests.length > 5 && (
-              <div className="pt-2 border-t border-gray-100">
-                <p className="text-xs text-gray-500 text-center">
-                  +{requests.length - 5} more requests
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        ))}
+      </div>
+    </div>
   );
 }
