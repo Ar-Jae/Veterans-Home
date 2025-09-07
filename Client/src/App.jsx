@@ -19,7 +19,7 @@ export default function App() {
         <Route path={createPageUrl('Dashboard')} element={<Dashboard />} />
         <Route path={createPageUrl('Residents')} element={<Residents />} />
         <Route path={createPageUrl('Rooms')} element={<Rooms />} />
-        <Route path={createPageUrl('FloorPlan')} element={<FloorPlan />} />
+        
         <Route path={createPageUrl('Activities')} element={<Activities />} />
         <Route path={createPageUrl('Maintenance')} element={<Maintenance />} />
         <Route path={createPageUrl('Meals')} element={<Meals />} />

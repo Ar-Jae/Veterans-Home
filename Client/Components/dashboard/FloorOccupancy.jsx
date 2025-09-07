@@ -1,8 +1,24 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Badge from "@/components/ui/badge";
+import { Card, CardHeader, CardBody, CardFooter, Avatar, Button } from "@chakra-ui/react";
+import { Badge, Stack } from "@chakra-ui/react";
+import { HiAtSymbol, HiStar } from "react-icons/hi";
+// Demo badges for UI reference
+export function BadgeDemo() {
+  return (
+    <Stack align="flex-start" mb={6}>
+      <Badge variant="solid" colorScheme="blue" px={2} py={1} fontSize="md">
+        <HiStar style={{ marginRight: 4 }} />
+        New
+      </Badge>
+      <Badge variant="solid" colorScheme="green" px={2} py={1} fontSize="md">
+        New
+        <HiAtSymbol style={{ marginLeft: 4 }} />
+      </Badge>
+    </Stack>
+  )
+}
 import { Building, User } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@chakra-ui/react";
 
 export default function FloorOccupancy({ residents = [], rooms = [], isLoading }) {
   const getFloorData = (floorNumber) => {

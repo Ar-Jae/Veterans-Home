@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
+import { Skeleton } from "@chakra-ui/react";
 import { Building, Users, Wrench, CheckCircle } from "lucide-react";
 
 import FloorLayout from "@/Components/floorplan/FloorLayout";
@@ -80,35 +80,30 @@ export default function FloorPlanPage() {
 
 
         <div className="bg-white rounded-lg shadow-lg overflow-x-auto">
-            <Tabs defaultValue="floor1" className="p-4 md:p-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                <TabsList>
-                  <TabsTrigger value="floor1">
-                    <Building className="w-4 h-4 mr-2" /> First Floor
-                  </TabsTrigger>
-                  <TabsTrigger value="floor2">
-                    <Building className="w-4 h-4 mr-2" /> Second Floor
-                  </TabsTrigger>
-                </TabsList>
-                <Legend />
-              </div>
-              
-              <TabsContent value="floor1" className="min-w-[1000px]">
-                <FloorLayout 
-                  floor={1} 
-                  rooms={floor1Rooms} 
-                  residents={residents}
-                  isLoading={isLoading} 
-                />
-              </TabsContent>
-              <TabsContent value="floor2" className="min-w-[1000px]">
-                <FloorLayout 
-                  floor={2} 
-                  rooms={floor2Rooms} 
-                  residents={residents} 
-                  isLoading={isLoading}
-                />
-              </TabsContent>
+            <Tabs variant="enclosed" colorScheme="blue" isFitted>
+              <TabList>
+                <Tab><Building className="w-4 h-4 mr-2" /> First Floor</Tab>
+                <Tab><Building className="w-4 h-4 mr-2" /> Second Floor</Tab>
+              </TabList>
+              <Legend />
+              <TabPanels>
+                <TabPanel className="min-w-[1000px]">
+                  <FloorLayout 
+                    floor={1} 
+                    rooms={floor1Rooms} 
+                    residents={residents}
+                    isLoading={isLoading} 
+                  />
+                </TabPanel>
+                <TabPanel className="min-w-[1000px]">
+                  <FloorLayout 
+                    floor={2} 
+                    rooms={floor2Rooms} 
+                    residents={residents} 
+                    isLoading={isLoading}
+                  />
+                </TabPanel>
+              </TabPanels>
             </Tabs>
         </div>
       </div>

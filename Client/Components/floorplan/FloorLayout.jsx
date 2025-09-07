@@ -1,6 +1,6 @@
 import React from 'react';
 import RoomBlock from './RoomBlock';
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@chakra-ui/react";
 
 const Wing = ({ rooms, residents, title }) => (
     <div className="flex flex-col gap-1">
