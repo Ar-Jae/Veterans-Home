@@ -27,6 +27,7 @@ export default function ResidentForm({ resident, onSubmit, onCancel }) {
     emergency_contact_phone: "",
     medical_notes: "",
     move_in_date: "",
+    move_out_date: "",
     status: "active"
   });
 
@@ -140,6 +141,16 @@ export default function ResidentForm({ resident, onSubmit, onCancel }) {
                 type="date"
                 value={formData.move_in_date}
                 onChange={(e) => handleInputChange('move_in_date', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="move_out_date">Move-out Date</Label>
+              <Input
+                id="move_out_date"
+                type="date"
+                value={formData.move_out_date}
+                onChange={(e) => handleInputChange('move_out_date', e.target.value)}
               />
             </div>
           </div>
