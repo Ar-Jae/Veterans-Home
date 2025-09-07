@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Resident } from "@/entities/all";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import Badge from "@/components/ui/badge";
 import { Search, Plus, UserPlus } from "lucide-react";
 
-import ResidentCard from "../components/residents/ResidentCard";
-import ResidentForm from "../components/residents/ResidentForm";
+import ResidentCard from "@/components/residents/ResidentCard";
+import ResidentForm from "@/components/residents/ResidentForm";
 
 export default function Residents() {
   const [residents, setResidents] = useState([]);

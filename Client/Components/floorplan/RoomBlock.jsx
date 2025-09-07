@@ -1,5 +1,5 @@
 import React from 'react';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import HoverCard from "@/components/ui/hover-card";
 import { User, Bed, Bath, Tv, BookOpen, Dumbbell, Briefcase, Wrench, XCircle } from "lucide-react";
 
 export default function RoomBlock({ style, room, resident, type, className }) {

@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect } from "react";
-import { Room, Resident } from "@/entities/all";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Building, Users, Wrench, CheckCircle } from "lucide-react";
 
-import FloorLayout from "../../Components/floorplan/FloorLayout";
-import Legend from "../../Components/floorplan/Legend";
+import FloorLayout from "@/Components/floorplan/FloorLayout";
+import Legend from "@/Components/floorplan/Legend";
 
 export default function FloorPlanPage() {
   const [rooms, setRooms] = useState([]);
