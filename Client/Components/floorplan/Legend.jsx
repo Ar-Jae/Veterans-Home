@@ -1,6 +1,6 @@
 import React from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+import Popover from "@/components/ui/popover";
+import Button from "@/components/ui/button";
 import { HelpCircle } from "lucide-react";
 
 const legendItems = [
@@ -15,26 +15,18 @@ const legendItems = [
 
 export default function Legend() {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-2">
-          <HelpCircle className="w-4 h-4" />
-          Legend
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-56">
-        <div className="space-y-2">
-          <h4 className="font-medium leading-none">Floor Plan Legend</h4>
-          <div className="grid gap-2">
-            {legendItems.map(item => (
-              <div key={item.label} className="flex items-center">
-                <div className={`w-4 h-4 rounded-sm mr-2 ${item.color}`} />
-                <span className="text-sm">{item.label}</span>
-              </div>
-            ))}
-          </div>
+    <Popover trigger={<Button className="flex items-center gap-2"><HelpCircle className="w-4 h-4" />Legend</Button>}>
+      <div className="space-y-2 w-56">
+        <h4 className="font-medium leading-none">Floor Plan Legend</h4>
+        <div className="grid gap-2">
+          {legendItems.map(item => (
+            <div key={item.label} className="flex items-center">
+              <div className={`w-4 h-4 rounded-sm mr-2 ${item.color}`} />
+              <span className="text-sm">{item.label}</span>
+            </div>
+          ))}
         </div>
-      </PopoverContent>
+      </div>
     </Popover>
   );
 }

@@ -1,29 +1,37 @@
-import React, { useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-export default function Tabs({ tabs, children }) {
-  const [active, setActive] = useState(0);
+const TabsContext = createContext();
+
+export function Tabs({ children, defaultValue = null, className = "" }) {
+  const [value, setValue] = useState(defaultValue);
   return (
-    <div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        {tabs.map((tab, i) => (
-          <button
-            key={tab}
-            onClick={() => setActive(i)}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 8,
-              background: active === i ? "#2563eb" : "#f4f7fb",
-              color: active === i ? "#fff" : "#2563eb",
-              border: "none",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-      <div>{children[active]}</div>
-    </div>
+    <TabsContext.Provider value={{ value, setValue }}>
+      <div className={className}>{children}</div>
+    </TabsContext.Provider>
   );
 }
+
+export function TabsList({ children, className = "" }) {
+  return <div className={className}>{children}</div>;
+}
+
+export function TabsTrigger({ value, children, className = "" }) {
+  const ctx = useContext(TabsContext);
+  const active = ctx?.value === value;
+  return (
+    <button
+      onClick={() => ctx?.setValue(value)}
+      className={className + (active ? " active" : "")}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function TabsContent({ value, children, className = "" }) {
+  const ctx = useContext(TabsContext);
+  if (ctx?.value !== value) return null;
+  return <div className={className}>{children}</div>;
+}
+
+export default Tabs;
