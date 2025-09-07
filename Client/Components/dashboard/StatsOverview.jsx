@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Users, Bed, Calendar, Wrench } from 'lucide-react';
 
 const StatCard = ({ title, value, total, subtext, icon, bgColor, gradient }) => (
@@ -44,12 +44,32 @@ const StatCard = ({ title, value, total, subtext, icon, bgColor, gradient }) => 
   </div>
 );
 
-export default function StatsOverview() {
+function StatsOverview() {
+  const [residentCount, setResidentCount] = useState(0);
+  const [roomOccupied, setRoomOccupied] = useState(0);
+  const [roomTotal, setRoomTotal] = useState(0);
+  const [maintenanceCount, setMaintenanceCount] = useState(0);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/residents')
+      .then(res => res.json())
+      .then(data => setResidentCount(data.length));
+    fetch('http://localhost:4000/api/rooms')
+      .then(res => res.json())
+      .then(data => {
+        setRoomTotal(data.length);
+        setRoomOccupied(data.filter(r => r.occupied > 0).length);
+      });
+    fetch('http://localhost:4000/api/maintenance')
+      .then(res => res.json())
+      .then(data => setMaintenanceCount(data.filter(m => m.status === 'open').length));
+  }, []);
+
   const stats = [
     {
       title: 'Total Residents',
-      value: '5',
-      total: '20',
+      value: residentCount,
+      total: roomTotal,
       subtext: 'Currently housed',
       icon: <Users className="text-blue-500" />,
       bgColor: '#eff6ff',
@@ -57,8 +77,8 @@ export default function StatsOverview() {
     },
     {
       title: 'Room Occupancy',
-      value: '4',
-      total: '6',
+      value: roomOccupied,
+      total: roomTotal,
       subtext: 'Rooms occupied',
       icon: <Bed className="text-emerald-500" />,
       bgColor: '#f0fdf4',
@@ -74,7 +94,7 @@ export default function StatsOverview() {
     },
     {
       title: 'Open Maintenance',
-      value: '2',
+      value: maintenanceCount,
       subtext: 'Requests pending',
       icon: <Wrench className="text-orange-500" />,
       bgColor: '#fff7ed',
@@ -103,3 +123,7 @@ export default function StatsOverview() {
     </div>
   );
 }
+
+export default StatsOverview;
+
+

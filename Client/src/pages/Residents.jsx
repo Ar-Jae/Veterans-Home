@@ -1,38 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-const ROOM_STORAGE_KEY = 'vh_rooms_v1';
-const RESIDENT_STORAGE_KEY = 'vh_residents_v1';
 
-function getInitialRooms() {
-  // Always 20 rooms, numbered 1A, 1B, ... 2J
-  const rooms = [];
-  for (let i = 1; i <= 2; i++) {
-    for (let j = 0; j < 10; j++) {
-      const letter = String.fromCharCode(65 + j);
-      rooms.push({
-        id: i * 100 + j,
-        number: `${i}${letter}`,
-        type: 'Single',
-        capacity: 1,
-        occupied: false,
-      });
-    }
-  }
-  return rooms;
-}
-
-function getStoredRooms() {
-  try {
-    const raw = localStorage.getItem(ROOM_STORAGE_KEY);
-    if (raw) {
-      const arr = JSON.parse(raw);
-      // Ensure always 20 rooms
-      if (arr.length === 20) return arr;
-    }
-  } catch {}
-  return getInitialRooms();
-}
 
 function getStoredResidents() {
   try {
@@ -108,18 +77,22 @@ function ResidentCard({r}){
 }
 
 export default function Residents(){
-  const [rooms, setRooms] = useState(getStoredRooms());
-  const [residents, setResidents] = useState(getStoredResidents());
+  const [rooms, setRooms] = useState([]);
+  const [residents, setResidents] = useState([]);
   const navigate = useNavigate();
   const [form, setForm] = useState({ name:'', age:'', branch:'', emergency:'', notes:'' });
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    localStorage.setItem(ROOM_STORAGE_KEY, JSON.stringify(rooms));
-  }, [rooms]);
+    fetch('http://localhost:4000/api/rooms')
+      .then(res => res.json())
+      .then(data => setRooms(data));
+  }, []);
   useEffect(() => {
-    localStorage.setItem(RESIDENT_STORAGE_KEY, JSON.stringify(residents));
-  }, [residents]);
+    fetch('http://localhost:4000/api/residents')
+      .then(res => res.json())
+      .then(data => setResidents(data));
+  }, []);
 
   function handleFormChange(e){
     const { name, value } = e.target;
@@ -128,28 +101,49 @@ export default function Residents(){
 
   function handleAddResident(e){
     e.preventDefault();
-    // Find first available room
-    const availableRoom = rooms.find(r => !r.occupied);
+  // Find first available room (occupied can be boolean or number)
+  const availableRoom = rooms.find(r => !r.occupied);
     if (!availableRoom) {
       alert('No available rooms!');
       return;
     }
-    const newResident = {
-      id: Date.now(),
-      name: form.name,
-      room: availableRoom.number,
-      age: form.age,
-      branch: form.branch,
-      status: 'active',
-      movedIn: new Date().toLocaleString('default', { month: 'short', year: 'numeric' }),
-      tenure: 'New',
-      emergency: form.emergency,
-      notes: form.notes,
-    };
-    setResidents(prev => [newResident, ...prev]);
-    setRooms(prev => prev.map(r => r.id === availableRoom.id ? { ...r, occupied: true } : r));
-    setForm({ name:'', age:'', branch:'', emergency:'', notes:'' });
-    setShowForm(false);
+    // Add resident to backend
+    fetch('http://localhost:4000/api/residents', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name,
+        age: form.age,
+        branch: form.branch,
+        room_number: availableRoom.room_number || availableRoom.number,
+        status: 'active',
+        movedIn: new Date().toLocaleString('default', { month: 'short', year: 'numeric' }),
+        tenure: 'New',
+        emergency: form.emergency,
+        notes: form.notes,
+      })
+    })
+      .then(res => res.json())
+      .then(newResident => {
+        // Refetch residents from backend to ensure state is up to date
+        fetch('http://localhost:4000/api/residents')
+          .then(res => res.json())
+          .then(data => setResidents(data));
+        // Update room occupancy in backend
+        fetch(`http://localhost:4000/api/rooms/${availableRoom._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ occupied: 1 })
+        })
+          .then(() => {
+            // Refetch rooms from backend to ensure state is up to date
+            fetch('http://localhost:4000/api/rooms')
+              .then(res => res.json())
+              .then(data => setRooms(data));
+          });
+        setForm({ name:'', age:'', branch:'', emergency:'', notes:'' });
+        setShowForm(false);
+      });
   }
 
   const filteredResidents = residents.filter(r => {
@@ -203,8 +197,9 @@ export default function Residents(){
 
         <div style={{marginBottom:24,display:'flex',gap:20}}>
           <StatCard title="Active Residents" value={residents.length} />
-          <StatCard title="On Leave" value={0} />
-          <StatCard title="Total Residents" value={residents.length} />
+          <StatCard title="Available Rooms" value={rooms.filter(r => !r.occupied).length} />
+          <StatCard title="Occupied Rooms" value={rooms.filter(r => r.occupied).length} />
+          <StatCard title="Total Rooms" value={rooms.length} />
         </div>
 
         <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:18}}>

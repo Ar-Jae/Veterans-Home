@@ -6,10 +6,13 @@ const Wing = ({ rooms, residents, title }) => (
     <div className="flex flex-col gap-1">
         {title && <h4 className="text-sm font-semibold text-center mb-2 text-gray-600">{title}</h4>}
         <div className="flex flex-col gap-1 p-2 bg-gray-200 border-2 border-gray-300 rounded-lg">
-            {rooms.map(roomConfig => {
-                const resident = roomConfig.type === 'Bedroom' ? residents.find(r => r.room_number === roomConfig.room.room_number) : null;
-                return <RoomBlock key={roomConfig.id} {...roomConfig} resident={resident} />;
-            })}
+                        {rooms.map(roomConfig => {
+                                // Support both resident.room_number and resident.room
+                                const resident = roomConfig.type === 'Bedroom'
+                                    ? residents.find(r => (r.room_number || r.room) === roomConfig.room.room_number)
+                                    : null;
+                                return <RoomBlock key={roomConfig.id} {...roomConfig} resident={resident} />;
+                        })}
         </div>
     </div>
 );
@@ -107,27 +110,56 @@ const getFloor2Config = (rooms) => {
 
 const Floor1Layout = ({ rooms, residents }) => {
     const config = getFloor1Config(rooms);
+    // Find maintenance rooms on this floor
+    const maintenanceRooms = rooms.filter(r => r.maintenance || r.status === 'maintenance');
     return (
-        <div className="flex flex-row justify-around items-start gap-4 p-4">
-            <div className="flex flex-row items-end gap-1">
-                <Wing rooms={config.leftWing.bedrooms} residents={residents} />
-                <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
-                    {config.leftWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+        <div className="flex flex-col gap-6">
+            <div className="bg-white rounded-xl shadow p-6 mb-2">
+                <div className="flex items-center gap-2 mb-1">
+                    <span className="text-blue-600"><svg width="20" height="20" fill="none"><rect width="20" height="20" rx="4" fill="#EFF6FF"/><path d="M7 8V6a3 3 0 1 1 6 0v2" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="5" y="8" width="10" height="8" rx="2" stroke="#2563EB" strokeWidth="2"/></svg></span>
+                    <span className="font-bold text-lg text-gray-900">Floor 1</span>
+                </div>
+                <div className="text-gray-500 mb-2">Main hub: meals, gatherings, and staff spaces</div>
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="text-gray-600 text-sm">Occupancy Rate</span>
+                    {maintenanceRooms.length > 0 && (
+                        <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full ml-2">{maintenanceRooms.length} room{maintenanceRooms.length > 1 ? 's' : ''} in maintenance</span>
+                    )}
+                    <span className="ml-auto bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">{rooms.filter(r => r.occupied).length}/10 rooms</span>
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded mb-4">
+                    <div className="h-2 bg-blue-500 rounded" style={{ width: `${(rooms.filter(r => r.occupied).length / 10) * 100}%` }}></div>
+                </div>
+                <div className="text-gray-700 font-semibold mb-1">Recent Residents:</div>
+                <div className="flex flex-col gap-1">
+                    {residents.slice(0, 3).map(r => (
+                        <div key={r.id} className="flex items-center gap-2 text-gray-800">
+                            <span className="text-gray-400"><svg width="18" height="18" fill="none"><circle cx="9" cy="6" r="3" fill="#CBD5E1"/><rect x="4" y="11" width="10" height="5" rx="2.5" fill="#CBD5E1"/></svg></span>
+                            <span className="font-semibold">{r.name || `${r.first_name} ${r.last_name}`}</span>
+                            <span className="text-gray-500">- Room {r.room || r.room_number}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
-
-            <div className="flex flex-col items-center gap-4 pt-10">
-                 <div className="flex flex-col items-center gap-1">
-                    {config.centerTop.map(c => <CommonArea key={c.id} room={c} />)}
+            <div className="flex flex-row justify-around items-start gap-4 p-4">
+                <div className="flex flex-row items-end gap-1">
+                    <Wing rooms={config.leftWing.bedrooms} residents={residents} />
+                    <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
+                        {config.leftWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                    </div>
                 </div>
-                {config.centerMain.map(c => <CommonArea key={c.id} room={c} />)}
-            </div>
-            
-            <div className="flex flex-row items-end gap-1">
-                 <div className="flex flex-col justify-around h-full pb-1 pt-12 gap-1">
-                    {config.rightWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                <div className="flex flex-col items-center gap-4 pt-10">
+                    <div className="flex flex-col items-center gap-1">
+                        {config.centerTop.map(c => <CommonArea key={c.id} room={c} />)}
+                    </div>
+                    {config.centerMain.map(c => <CommonArea key={c.id} room={c} />)}
                 </div>
-                <Wing rooms={config.rightWing.bedrooms} residents={residents} />
+                <div className="flex flex-row items-end gap-1">
+                    <div className="flex flex-col justify-around h-full pb-1 pt-12 gap-1">
+                        {config.rightWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                    </div>
+                    <Wing rooms={config.rightWing.bedrooms} residents={residents} />
+                </div>
             </div>
         </div>
     );
@@ -135,33 +167,61 @@ const Floor1Layout = ({ rooms, residents }) => {
 
 const Floor2Layout = ({ rooms, residents }) => {
     const config = getFloor2Config(rooms);
+    const maintenanceRooms = rooms.filter(r => r.maintenance || r.status === 'maintenance');
     return (
-         <div className="flex flex-row justify-around items-start gap-4 p-4">
-             <div className="flex flex-col items-center gap-4 pt-10">
-                {config.leftWing.map(c => <CommonArea key={c.id} room={c} />)}
-             </div>
-
-            <div className="flex flex-row items-end gap-1">
-                <Wing rooms={config.centerWing.bedrooms} residents={residents} />
-                <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
-                    {config.centerWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+        <div className="flex flex-col gap-6">
+            <div className="bg-white rounded-xl shadow p-6 mb-2">
+                <div className="flex items-center gap-2 mb-1">
+                    <span className="text-blue-600"><svg width="20" height="20" fill="none"><rect width="20" height="20" rx="4" fill="#EFF6FF"/><path d="M7 8V6a3 3 0 1 1 6 0v2" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="5" y="8" width="10" height="8" rx="2" stroke="#2563EB" strokeWidth="2"/></svg></span>
+                    <span className="font-bold text-lg text-gray-900">Floor 2</span>
+                </div>
+                <div className="text-gray-500 mb-2">Quiet spaces: rest, therapy, and personal growth</div>
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="text-gray-600 text-sm">Occupancy Rate</span>
+                    {maintenanceRooms.length > 0 && (
+                        <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full ml-2">{maintenanceRooms.length} room{maintenanceRooms.length > 1 ? 's' : ''} in maintenance</span>
+                    )}
+                    <span className="ml-auto bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">{rooms.filter(r => r.occupied).length}/10 rooms</span>
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded mb-4">
+                    <div className="h-2 bg-blue-500 rounded" style={{ width: `${(rooms.filter(r => r.occupied).length / 10) * 100}%` }}></div>
+                </div>
+                <div className="text-gray-700 font-semibold mb-1">Recent Residents:</div>
+                <div className="flex flex-col gap-1">
+                    {residents.slice(0, 3).map(r => (
+                        <div key={r.id} className="flex items-center gap-2 text-gray-800">
+                            <span className="text-gray-400"><svg width="18" height="18" fill="none"><circle cx="9" cy="6" r="3" fill="#CBD5E1"/><rect x="4" y="11" width="10" height="5" rx="2.5" fill="#CBD5E1"/></svg></span>
+                            <span className="font-semibold">{r.name || `${r.first_name} ${r.last_name}`}</span>
+                            <span className="text-gray-500">- Room {r.room || r.room_number}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
-
-             <div className="flex flex-col items-center gap-4 pt-10">
+            <div className="flex flex-row justify-around items-start gap-4 p-4">
+                <div className="flex flex-col items-center gap-4 pt-10">
+                    {config.leftWing.map(c => <CommonArea key={c.id} room={c} />)}
+                </div>
                 <div className="flex flex-row items-end gap-1">
-                    <div className="flex flex-col items-center gap-2">
-                        {config.rightWing.main.map(c => <CommonArea key={c.id} room={c} />)}
+                    <Wing rooms={config.centerWing.bedrooms} residents={residents} />
+                    <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
+                        {config.centerWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
                     </div>
-                     <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
-                        {config.rightWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                </div>
+                <div className="flex flex-col items-center gap-4 pt-10">
+                    <div className="flex flex-row items-end gap-1">
+                        <div className="flex flex-col items-center gap-2">
+                            {config.rightWing.main.map(c => <CommonArea key={c.id} room={c} />)}
+                        </div>
+                        <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
+                            {config.rightWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                        </div>
+                        <Wing rooms={config.rightWing.bedrooms} residents={residents} />
                     </div>
-                    <Wing rooms={config.rightWing.bedrooms} residents={residents} />
+                    <div className="flex flex-row gap-1">
+                        {config.bottomBath.map(c => <CommonArea key={c.id} room={c} />)}
+                    </div>
                 </div>
-                <div className="flex flex-row gap-1">
-                     {config.bottomBath.map(c => <CommonArea key={c.id} room={c} />)}
-                </div>
-             </div>
+            </div>
         </div>
     );
 };

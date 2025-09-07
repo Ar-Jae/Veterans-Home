@@ -6,6 +6,7 @@ const { connect } = require('./db')
 const residents = require('./routes/residents')
 const rooms = require('./routes/rooms')
 const maintenance = require('./routes/maintenance')
+const info = require('./routes/info')
 
 const app = express()
 app.use(cors())
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use('/api/residents', residents)
 app.use('/api/rooms', rooms)
 app.use('/api/maintenance', maintenance)
+app.use('/api/info', info)
 
 const PORT = process.env.PORT || 4000
 

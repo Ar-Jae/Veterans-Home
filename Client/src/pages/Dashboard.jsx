@@ -1,8 +1,8 @@
 
 import React from 'react'
-import StatsOverview from '@/components/dashboard/StatsOverview'
-import FloorOccupancy from '@/components/dashboard/FloorOccupancy'
-import MaintenanceAlerts from '@/components/dashboard/MaintenanceAlerts'
+import StatsOverview from '@/Components/dashboard/StatsOverview'
+import FloorOccupancy from '@/Components/dashboard/FloorOccupancy'
+import MaintenanceAlerts from '@/Components/dashboard/MaintenanceAlerts'
 
 export default function Dashboard(){
   return (

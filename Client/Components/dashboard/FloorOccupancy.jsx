@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardHeader, CardBody, CardFooter, Avatar, Button } from "@chakra-ui/react";
 import { Badge, Stack } from "@chakra-ui/react";
 import { HiAtSymbol, HiStar } from "react-icons/hi";
+import { useState, useEffect } from "react";
 // Demo badges for UI reference
 export function BadgeDemo() {
   return (
@@ -20,16 +21,32 @@ export function BadgeDemo() {
 import { Building, User } from "lucide-react";
 import { Skeleton } from "@chakra-ui/react";
 
-export default function FloorOccupancy({ residents = [], rooms = [], isLoading }) {
+
+
+export default function FloorOccupancy() {
+  const [residents, setResidents] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      fetch('http://localhost:4000/api/residents').then(res => res.json()),
+      fetch('http://localhost:4000/api/rooms').then(res => res.json())
+    ]).then(([residentsData, roomsData]) => {
+      setResidents(residentsData);
+      setRooms(roomsData);
+      setIsLoading(false);
+    });
+  }, []);
+
   const getFloorData = (floorNumber) => {
     const floorRooms = Array.isArray(rooms) ? rooms.filter(room => room.floor === floorNumber) : [];
     const floorResidents = Array.isArray(residents) ? residents.filter(resident => resident.floor === floorNumber) : [];
-    
     return {
       totalRooms: floorRooms.length,
-      occupiedRooms: floorRooms.filter(room => room.occupancy_status === 'occupied').length,
+      occupiedRooms: floorRooms.filter(room => room.occupied > 0).length,
       residents: floorResidents,
-      maintenanceRooms: floorRooms.filter(room => room.occupancy_status === 'maintenance').length
+      maintenanceRooms: floorRooms.filter(room => room.maintenance === true).length
     };
   };
 
@@ -89,7 +106,7 @@ export default function FloorOccupancy({ residents = [], rooms = [], isLoading }
               <span style={{color:'#9ca3af',fontSize:'0.95rem'}}>No residents</span>
             ) : (
               data.residents.slice(0,3).map((resident, idx) => (
-                <div key={resident.id || idx} style={{display:'flex',alignItems:'center',gap:8}}>
+                <div key={resident._id || idx} style={{display:'flex',alignItems:'center',gap:8}}>
                   <User style={{color:'#6366f1'}} size={16} />
                   <span style={{fontWeight:500,color:'#374151',fontSize:'0.95rem'}}>{resident.name}</span>
                   <span style={{color:'#6b7280',fontSize:'0.95rem'}}>— Room {resident.room_number}</span>
@@ -101,6 +118,10 @@ export default function FloorOccupancy({ residents = [], rooms = [], isLoading }
       </div>
     );
   };
+
+  if (isLoading) {
+    return <Skeleton height="200px" />;
+  }
 
   return (
     <div className="space-y-6">

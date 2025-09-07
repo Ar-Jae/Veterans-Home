@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ROOM_STORAGE_KEY = 'vh_rooms_v1';
 const RESIDENT_STORAGE_KEY = 'vh_residents_v1';
 
 function getStoredRooms() {

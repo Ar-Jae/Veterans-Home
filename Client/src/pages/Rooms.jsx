@@ -1,52 +1,34 @@
 import React, { useEffect, useState } from 'react'
 
-const STORAGE_KEY = 'vh_rooms_v1'
 
 export default function Rooms(){
-  const [rooms, setRooms] = useState(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      return raw ? JSON.parse(raw) : [
-  { id: 1, number: '101A', type: 'Single', capacity: 1, occupied: true, occupant: 'John Doe' },
-  { id: 2, number: '203B', type: 'Double', capacity: 2, occupied: false, occupant: '' }
-      ]
-    } catch (e) { return [] }
-  })
-
-  const [form, setForm] = useState({ number: '', type: 'Single', capacity: 1, occupant: '' })
+  const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms)) } catch (e) {}
-  }, [rooms])
+    fetch('http://localhost:4000/api/rooms')
+      .then(res => res.json())
+      .then(data => {
+        // Map backend data to UI format if needed
+        setRooms(data.map(room => ({
+          id: room._id,
+          number: room.room_number || room.number,
+          type: room.type || (room.capacity === 2 ? 'Double' : 'Single'),
+          capacity: room.capacity,
+          occupied: room.occupied,
+          occupant: '', // You can extend this if you have occupant info
+        })));
+      });
+  }, []);
+
+  // ...existing code...
 
   function handleChange(e){
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: name === 'capacity' ? Number(value) : value }))
   }
 
-  function addRoom(e){
-    e.preventDefault()
-    if (!form.number) return
-    const id = Date.now()
-    setRooms(prev => [ { id, ...form, occupied: false, occupant: '' }, ...prev ])
-    setForm({ number: '', type: 'Single', capacity: 1, occupant: '' })
-  }
-
-  function removeRoom(id){ setRooms(prev => prev.filter(r => r.id !== id)) }
-
-  function toggleOccupied(id){
-    setRooms(prev => prev.map(r => {
-      if (r.id === id) {
-        if (!r.occupied) {
-          const occupant = prompt('Enter occupant name:') || ''
-          return { ...r, occupied: true, occupant }
-        } else {
-          return { ...r, occupied: false, occupant: '' }
-        }
-      }
-      return r
-    }))
-  }
+  // Add/remove/toggle functions should be updated to use backend if needed
+  // For now, only display live data
 
   return (
     <div style={{
