@@ -1,0 +1,129 @@
+/* Theme and utility mappings to approximate the Haven UI without Tailwind.
+	 This file intentionally implements a small set of utility classes used
+	 by the React components so the layout looks sensible even if Tailwind
+	 isn't configured in the environment. Keep it small and targeted. */
+
+:root{
+	--bg:#f4f7fb; /* page background */
+	--sidebar-bg:#fbfdff; /* sidebar panel */
+	--muted:#6b7280;
+	--text:#0f172a;
+	--accent:#6366f1; /* blue/purple accent */
+	--card-bg:#ffffff;
+	--border:#e6eef8;
+	--shadow: 0 8px 24px rgba(15,23,42,0.06);
+}
+
+html,body,#root{height:100%;margin:0}
+body{
+	font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+	color:var(--text);
+	background:var(--bg);
+}
+
+/* small set of utility classes used in JSX */
+.min-h-screen{min-height:100vh}
+.flex{display:flex}
+.flex-1{flex:1}
+.w-full{width:100%}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.gap-3{gap:0.75rem}
+.rounded-lg{border-radius:0.75rem}
+.rounded-full{border-radius:9999px}
+.p-6{padding:1.5rem}
+.p-4{padding:1rem}
+.px-4{padding-left:1rem;padding-right:1rem}
+.py-3{padding-top:0.75rem;padding-bottom:0.75rem}
+.text-white{color:white}
+.font-bold{font-weight:700}
+.text-lg{font-size:1.125rem}
+.text-xs{font-size:0.75rem}
+
+/* Sidebar approximation: most components pass Tailwind utility class names
+	 like `border-r` and `border-blue-100` — provide reasonable defaults here */
+.border-r{
+	width:260px;
+	background:var(--sidebar-bg);
+	border-right:1px solid var(--border);
+	display:flex;
+	flex-direction:column;
+	min-height:100vh;
+}
+.border-t{border-top:1px solid var(--border)}
+.border-blue-100{border-color:var(--border)}
+
+.sidebar-header{padding:1.5rem}
+.sidebar-header .logo{
+	display:flex;
+	align-items:center;
+	gap:0.75rem;
+}
+.sidebar-header .logo .avatar{
+	width:40px;height:40px;border-radius:8px;background:linear-gradient(90deg,var(--accent),#2563eb);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:var(--shadow);
+}
+
+/* Navigation list inside sidebar */
+.border-r .SidebarContent{padding:0.75rem}
+.border-r .SidebarGroupLabel{padding:0.5rem 0.75rem;color:var(--muted);font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.border-r a{color:var(--muted);text-decoration:none}
+.border-r .nav-link{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.9rem;border-radius:10px;margin-bottom:0.4rem;color:var(--muted);transition:all 160ms}
+.border-r .nav-link:hover{background:#eef6ff;color:var(--accent);box-shadow:0 1px 0 rgba(0,0,0,0.02)}
+.bg-blue-100{background:#eaf4ff}
+.text-blue-700{color:#1d4ed8}
+
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border);margin-top:auto}
+.sidebar-footer .profile{display:flex;align-items:center;gap:0.75rem}
+
+/* Main content area */
+main{flex:1;display:flex;flex-direction:column;background:transparent}
+.flex-1.overflow-auto{overflow:auto}
+.page-content{padding:2rem;max-width:1200px;margin:0 auto}
+
+.card-row{display:flex;gap:1rem;align-items:flex-start}
+
+.resident-list{display:grid;gap:12px}
+.badge{padding:0.35rem 0.6rem;border-radius:999px;background:#eef2ff;color:var(--accent);font-weight:600}
+
+/* Residents page specifics */
+.stats-row{display:flex;gap:1rem}
+.primary-btn{background:#2563eb;color:white;padding:0.6rem 1rem;border-radius:8px;font-weight:600;box-shadow:0 6px 18px rgba(37,99,235,0.12);border:none}
+.search-input{flex:1;padding:0.6rem 0.9rem;border-radius:8px;border:1px solid #e6eef8;background:white;min-width:320px}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.resident-card{position:relative;padding:1rem}
+.resident-card .avatar{width:52px;height:52px;border-radius:999px;background:#c7d2fe;display:flex;align-items:center;justify-content:center;color:#1e3a8a;font-weight:700}
+.resident-card .edit-btn{position:absolute;right:12px;top:12px;background:transparent;border:none;cursor:pointer}
+.pill{display:inline-block;padding:0.18rem 0.5rem;border-radius:999px;font-size:0.75rem}
+
+@media (max-width:1000px){
+	.res-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:700px){
+	.res-grid{grid-template-columns:1fr}
+}
+
+
+/* Card / panel styles used throughout the dashboard */
+.card{background:var(--card-bg);border-radius:0.75rem;padding:1rem;box-shadow:var(--shadow);border:1px solid rgba(15,23,42,0.04)}
+.card-row{display:flex;gap:1rem;align-items:flex-start}
+.card .card-title{font-weight:700;margin-bottom:0.5rem}
+
+/* small badges and status */
+.badge{display:inline-block;padding:0.25rem 0.5rem;border-radius:999px;font-size:0.75rem;background:#eef2ff;color:var(--accent)}
+.pill{background:#fff5f5;color:#b91c1c;padding:0.25rem 0.5rem;border-radius:999px;font-size:0.75rem}
+
+/* utility text/colors used in layout */
+.text-gray-500{color:#6b7280}
+.text-gray-900{color:#0f172a}
+.font-medium{font-weight:500}
+
+/* small responsive tweaks */
+@media (max-width:720px){
+	.border-r{width:100%;position:relative}
+}
+
+/* Back-compat: keep the minimal font reset for elements that expect it */
+code,pre{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Helvetica Neue', monospace}
+
