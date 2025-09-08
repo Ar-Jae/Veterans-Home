@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Resident, CasePlan } from "@/entities/all";
+// import { Resident, CasePlan } from "@/entities/all"; // Removed: file does not exist
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Briefcase, Home, CheckCircle } from "lucide-react";
-import KPIReportCard from "../components/reports/KPIReportCard";
-import DemographicsChart from "../components/reports/DemographicsChart";
-import OutcomesChart from "../components/reports/OutcomesChart";
+import KPIReportCard from "../../Components/reports/KPIReportCard";
+import DemographicsChart from "../../Components/reports/DemographicsChart";
+import OutcomesChart from "../../Components/reports/OutcomesChart";
 
 export default function Reports() {
   const [residents, setResidents] = useState([]);

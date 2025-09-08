@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { StaffMember } from "@/entities/all";
 import { Button } from "@/components/ui/button";
 import { Plus, UserCheck } from "lucide-react";
-import StaffCard from "../components/staff/StaffCard";
-import AddStaffDialog from "../components/staff/AddStaffDialog";
+import StaffCard from "@/components/staff/StaffCard";
+import AddStaffDialog from "@/components/staff/AddStaffDialog";
 
 export default function Staff() {
   const [staff, setStaff] = useState([]);

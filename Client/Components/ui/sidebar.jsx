@@ -11,6 +11,12 @@ const navItems = [
   { label: "Activities", icon: FiClipboard, href: "/activities" },
   { label: "Maintenance", icon: FiTool, href: "/maintenance" },
   { label: "Meal Planning", icon: FiTool, href: "/meals" },
+  // New sidebar items
+  { label: "Finance", icon: FiTool, href: "/finance" },
+  { label: "Incidents", icon: FiTool, href: "/incidents" },
+  { label: "Payments", icon: FiTool, href: "/payments" },
+  { label: "Reports", icon: FiTool, href: "/reports" },
+  { label: "Staff", icon: FiTool, href: "/staff" },
 ];
 
 export default function Sidebar() {

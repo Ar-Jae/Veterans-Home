@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Popover from "../ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,9 +33,9 @@ export default function AddIncidentDialog({ open, onClose, onSubmit }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader><DialogTitle className="text-2xl font-bold">Log New Incident</DialogTitle></DialogHeader>
+    <Popover trigger={<Button><Plus className="w-4 h-4 mr-2" />Log Incident</Button>}>
+      <div className="max-w-2xl p-4">
+        <div className="text-2xl font-bold mb-2">Log New Incident</div>
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><Label htmlFor="date">Date *</Label><Input id="date" type="date" value={formData.date} onChange={(e) => handleInputChange('date', e.target.value)} required /></div>
@@ -53,7 +53,7 @@ export default function AddIncidentDialog({ open, onClose, onSubmit }) {
             <Button type="submit" disabled={isSubmitting} className="bg-red-600 hover:bg-red-700"><Plus className="w-4 h-4 mr-2" />{isSubmitting ? "Logging..." : "Log Incident"}</Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </Popover>
   );
 }

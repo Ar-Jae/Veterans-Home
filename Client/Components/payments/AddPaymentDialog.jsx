@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Popover from "../ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Plus, X } from "lucide-react";
 
 const PAYMENT_SOURCES = ["VA Per Diem", "State Housing Voucher", "Grant Funding", "Resident Fee", "Donation", "Fundraising", "Other"];
@@ -70,12 +69,9 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
   const showGrantField = formData.payment_source === "Grant Funding";
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Record New Payment</DialogTitle>
-        </DialogHeader>
-
+    <Popover trigger={<Button><Plus className="w-4 h-4 mr-2" />Record Payment</Button>}>
+      <div className="max-w-2xl max-h-[80vh] overflow-y-auto p-4">
+        <div className="text-2xl font-bold mb-2">Record New Payment</div>
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
           {/* Basic Payment Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -212,10 +208,12 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
               </Select>
             </div>
             <div className="flex items-center space-x-2 mt-6">
-              <Switch
+              <input
                 id="recurring"
+                type="checkbox"
                 checked={formData.recurring}
-                onCheckedChange={(checked) => handleInputChange('recurring', checked)}
+                onChange={e => handleInputChange('recurring', e.target.checked)}
+                style={{ width: 18, height: 18 }}
               />
               <Label htmlFor="recurring">Recurring Payment?</Label>
             </div>
@@ -232,7 +230,7 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </Popover>
   );
 }

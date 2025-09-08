@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Popover from "../ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,30 +28,43 @@ export default function AddExpenseDialog({ open, onClose, onSubmit }) {
     setIsSubmitting(false);
   };
 
+  if (!open) return null;
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl">
-        <DialogHeader><DialogTitle className="text-2xl font-bold">Log New Expense</DialogTitle></DialogHeader>
+    <Popover trigger={null} open={open} onOpenChange={onClose}>
+      <div className="max-w-xl p-6 bg-white rounded-lg shadow-lg">
+        <div className="text-2xl font-bold mb-2">Log New Expense</div>
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><Label htmlFor="date">Date *</Label><Input id="date" type="date" value={formData.date} onChange={(e) => handleInputChange('date', e.target.value)} required /></div>
-            <div><Label htmlFor="amount">Amount *</Label><Input id="amount" type="number" step="0.01" value={formData.amount} onChange={(e) => handleInputChange('amount', e.target.value)} placeholder="$0.00" required /></div>
+            <div>
+              <Label htmlFor="date">Date *</Label>
+              <Input id="date" type="date" value={formData.date} onChange={(e) => handleInputChange('date', e.target.value)} required />
+            </div>
+            <div>
+              <Label htmlFor="amount">Amount *</Label>
+              <Input id="amount" type="number" step="0.01" value={formData.amount} onChange={(e) => handleInputChange('amount', e.target.value)} placeholder="$0.00" required />
+            </div>
           </div>
           <div>
             <Label htmlFor="category">Category *</Label>
-            <Select onValueChange={(v) => handleInputChange('category', v)} required><SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger><SelectContent>{EXPENSE_CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent></Select>
+            <Select onValueChange={(v) => handleInputChange('category', v)} required>
+              <SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger>
+              <SelectContent>{EXPENSE_CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+            </Select>
           </div>
-          <div><Label htmlFor="description">Description *</Label><Textarea id="description" value={formData.description} onChange={(e) => handleInputChange('description', e.target.value)} required /></div>
+          <div>
+            <Label htmlFor="description">Description *</Label>
+            <Textarea id="description" value={formData.description} onChange={(e) => handleInputChange('description', e.target.value)} required />
+          </div>
           <div className="flex justify-end gap-4 pt-6 border-t">
             <Button type="button" variant="outline" onClick={onClose}><X className="w-4 h-4 mr-2" />Cancel</Button>
             <Button type="submit" disabled={isSubmitting} className="bg-navy-600 hover:bg-navy-700"><Plus className="w-4 h-4 mr-2" />{isSubmitting ? "Saving..." : "Save Expense"}</Button>
           </div>
         </form>
-      </DialogContent>
-      <style jsx>{`
-        .bg-navy-600 { background-color: #475569; }
-        .hover\\:bg-navy-700:hover { background-color: #334155; }
-      `}</style>
-    </Dialog>
+        <style jsx>{`
+          .bg-navy-600 { background-color: #475569; }
+          .hover\\:bg-navy-700:hover { background-color: #334155; }
+        `}</style>
+      </div>
+    </Popover>
   );
 }

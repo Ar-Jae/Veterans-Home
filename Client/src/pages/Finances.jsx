@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Expense } from "@/entities/all";
+import { Expense } from "../../utils/expense";
 import { Button } from "@/components/ui/button";
 import { Plus, DollarSign, Receipt, TrendingDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import StatsCard from "../components/dashboard/StatsCard";
-import ExpenseTable from "../components/finances/ExpenseTable";
-import AddExpenseDialog from "../components/finances/AddExpenseDialog";
-import FinancialSummaryChart from "../components/finances/FinancialSummaryChart";
+// import StatsCard from "../components/dashboard/StatsCard"; // Removed, use Card instead
+import ExpenseTable from "../../Components/finances/ExpenseTable";
+import AddExpenseDialog from "../../Components/finances/AddExpenseDialog";
+import FinancialSummaryChart from "../../Components/finances/FinancialSummaryChart";
 
 export default function Finances() {
   const [expenses, setExpenses] = useState([]);
@@ -53,9 +53,30 @@ export default function Finances() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatsCard title="Total Expenses (All Time)" value={`$${stats.totalExpenses.toLocaleString()}`} icon={DollarSign} color="purple" isLoading={isLoading} />
-          <StatsCard title="This Month's Expenses" value={`$${stats.monthlyExpenses.toLocaleString()}`} icon={TrendingDown} color="red" isLoading={isLoading} />
-          <StatsCard title="Total Transactions" value={stats.expenseCount} icon={Receipt} color="blue" isLoading={isLoading} />
+          <Card>
+            <CardHeader>
+              <CardTitle><DollarSign className="inline-block mr-2" />Total Expenses (All Time)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <span className="text-2xl font-bold">${stats.totalExpenses.toLocaleString()}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle><TrendingDown className="inline-block mr-2" />This Month's Expenses</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <span className="text-2xl font-bold">${stats.monthlyExpenses.toLocaleString()}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle><Receipt className="inline-block mr-2" />Total Transactions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <span className="text-2xl font-bold">{stats.expenseCount}</span>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-6">

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Payment, Resident } from "@/entities/all";
+// import { Payment, Resident } from "@/entities/all"; // Removed: file does not exist
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, CreditCard, TrendingUp, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import StatsCard from "../components/dashboard/StatsCard";
-import PaymentTable from "../components/payments/PaymentTable";
-import AddPaymentDialog from "../components/payments/AddPaymentDialog";
-import PaymentSourceChart from "../components/payments/PaymentSourceChart";
+// import StatsCard from "../components/dashboard/StatsCard"; // Removed, use Card instead
+import PaymentTable from "../../Components/payments/PaymentTable";
+import AddPaymentDialog from "../../Components/payments/AddPaymentDialog";
+import PaymentSourceChart from "../../Components/payments/PaymentSourceChart";
 
 export default function Payments() {
   const [payments, setPayments] = useState([]);
@@ -99,38 +99,42 @@ export default function Payments() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatsCard
-            title="Total Revenue"
-            value={`$${stats.totalRevenue.toLocaleString()}`}
-            subtitle="all time"
-            icon={DollarSign}
-            color="green"
-            isLoading={isLoading}
-          />
-          <StatsCard
-            title="Monthly Revenue"
-            value={`$${stats.monthlyRevenue.toLocaleString()}`}
-            subtitle="this month"
-            icon={TrendingUp}
-            color="blue"
-            isLoading={isLoading}
-          />
-          <StatsCard
-            title="Average Payment"
-            value={`$${stats.averagePayment.toLocaleString()}`}
-            subtitle="per transaction"
-            icon={CreditCard}
-            color="purple"
-            isLoading={isLoading}
-          />
-          <StatsCard
-            title="Total Payments"
-            value={stats.paymentCount}
-            subtitle="transactions"
-            icon={CreditCard}
-            color="indigo"
-            isLoading={isLoading}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle><DollarSign className="inline-block mr-2" />Total Revenue</CardTitle>
+              <div className="text-xs text-slate-500">all time</div>
+            </CardHeader>
+            <CardContent>
+              <span className="text-2xl font-bold">${stats.totalRevenue.toLocaleString()}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle><TrendingUp className="inline-block mr-2" />Monthly Revenue</CardTitle>
+              <div className="text-xs text-slate-500">this month</div>
+            </CardHeader>
+            <CardContent>
+              <span className="text-2xl font-bold">${stats.monthlyRevenue.toLocaleString()}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle><CreditCard className="inline-block mr-2" />Average Payment</CardTitle>
+              <div className="text-xs text-slate-500">per transaction</div>
+            </CardHeader>
+            <CardContent>
+              <span className="text-2xl font-bold">${stats.averagePayment.toLocaleString()}</span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle><CreditCard className="inline-block mr-2" />Total Payments</CardTitle>
+              <div className="text-xs text-slate-500">transactions</div>
+            </CardHeader>
+            <CardContent>
+              <span className="text-2xl font-bold">{stats.paymentCount}</span>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Filters */}

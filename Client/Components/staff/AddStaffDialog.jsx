@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+// import { Switch } from "@/components/ui/switch"; // Removed, use checkbox instead
 import { Plus, X } from "lucide-react";
+import Popover from "../ui/popover";
 
 const POSITIONS = ["Executive Director", "Program Director", "Case Manager", "House Manager", "Peer Support Mentor", "Cook", "Housekeeper", "Mental Health Liaison"];
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contractor"];
@@ -35,9 +35,9 @@ export default function AddStaffDialog({ open, onClose, onSubmit }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader><DialogTitle className="text-2xl font-bold">Add New Staff Member</DialogTitle></DialogHeader>
+    <Popover trigger={<Button><Plus className="w-4 h-4 mr-2" />Add Staff</Button>}>
+      <div className="max-w-2xl p-4">
+        <div className="text-2xl font-bold mb-2">Add New Staff Member</div>
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><Label htmlFor="first_name">First Name *</Label><Input id="first_name" value={formData.first_name} onChange={(e) => handleInputChange('first_name', e.target.value)} required /></div>
@@ -53,18 +53,23 @@ export default function AddStaffDialog({ open, onClose, onSubmit }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
             <div><Label htmlFor="hire_date">Hire Date</Label><Input id="hire_date" type="date" value={formData.hire_date} onChange={(e) => handleInputChange('hire_date', e.target.value)} /></div>
-            <div className="flex items-center space-x-2 mt-6"><Switch id="veteran_status" checked={formData.veteran_status} onCheckedChange={(c) => handleInputChange('veteran_status', c)} /><Label htmlFor="veteran_status">Is a Veteran?</Label></div>
+            <div className="flex items-center space-x-2 mt-6">
+              <input
+                id="veteran_status"
+                type="checkbox"
+                checked={formData.veteran_status}
+                onChange={e => handleInputChange('veteran_status', e.target.checked)}
+                style={{ width: 18, height: 18 }}
+              />
+              <Label htmlFor="veteran_status">Is a Veteran?</Label>
+            </div>
           </div>
           <div className="flex justify-end gap-4 pt-6 border-t">
             <Button type="button" variant="outline" onClick={onClose}><X className="w-4 h-4 mr-2" />Cancel</Button>
             <Button type="submit" disabled={isSubmitting} className="bg-navy-600 hover:bg-navy-700"><Plus className="w-4 h-4 mr-2" />{isSubmitting ? "Saving..." : "Save Staff Member"}</Button>
           </div>
         </form>
-      </DialogContent>
-      <style jsx>{`
-        .bg-navy-600 { background-color: #475569; }
-        .hover\\:bg-navy-700:hover { background-color: #334155; }
-      `}</style>
-    </Dialog>
+      </div>
+    </Popover>
   );
 }

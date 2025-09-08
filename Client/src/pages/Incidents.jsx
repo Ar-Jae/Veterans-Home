@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Incident } from "@/entities/all";
+// import { Incident } from "@/entities/all"; // Removed: file does not exist
 import { Button } from "@/components/ui/button";
 import { Plus, AlertTriangle } from "lucide-react";
-import IncidentCard from "../components/incidents/IncidentCard";
-import AddIncidentDialog from "../components/incidents/AddIncidentDialog";
+import IncidentCard from "../../Components/incidents/IncidentCard";
+import AddIncidentDialog from "../../Components/incidents/AddIncidentDialog";
 
 export default function Incidents() {
   const [incidents, setIncidents] = useState([]);

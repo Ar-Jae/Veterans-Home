@@ -48,6 +48,32 @@ const navigationItems = [
     url: createPageUrl("Meals"),
     icon: ChefHat,
   },
+  // New sidebar items
+  {
+    title: "Finance",
+    url: createPageUrl("Finance"),
+    icon: Building, // Replace with a finance icon if available
+  },
+  {
+    title: "Incidents",
+    url: createPageUrl("Incidents"),
+    icon: Calendar, // Replace with an incident icon if available
+  },
+  {
+    title: "Payments",
+    url: createPageUrl("Payments"),
+    icon: ChefHat, // Replace with a payments icon if available
+  },
+  {
+    title: "Reports",
+    url: createPageUrl("Reports"),
+    icon: Map, // Replace with a reports icon if available
+  },
+  {
+    title: "Staff",
+    url: createPageUrl("Staff"),
+    icon: Users, // Replace with a staff icon if available
+  },
 ];
 
 export default function Layout({ children, currentPageName }) {
