@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, FormControl, FormLabel, Input, Select, Box, VStack } from "@chakra-ui/react"
+import { Button, FormControl, FormLabel, Input, Box, VStack } from "@chakra-ui/react"
 
 const STORAGE_KEY = 'vh_maintenance_v1'
 
@@ -49,11 +49,11 @@ export default function Maintenance(){
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Priority</FormLabel>
-              <Select name="priority" value={form.priority} onChange={handleChange}>
+              <select name="priority" value={form.priority} onChange={handleChange} className="px-3 py-2 border rounded">
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
-              </Select>
+              </select>
             </FormControl>
             <FormControl>
               <FormLabel>Date</FormLabel>

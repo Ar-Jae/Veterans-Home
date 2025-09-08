@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 // import { Payment, Resident } from "@/entities/all"; // Removed: file does not exist
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
 import { Plus, Search, CreditCard, TrendingUp, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import StatsCard from "../components/dashboard/StatsCard"; // Removed, use Card instead

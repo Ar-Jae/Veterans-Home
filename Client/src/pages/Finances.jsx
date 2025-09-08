@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Expense } from "../../utils/expense";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Plus, DollarSign, Receipt, TrendingDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 // import StatsCard from "../components/dashboard/StatsCard"; // Removed, use Card instead

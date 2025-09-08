@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import Badge from "@/components/ui/badge";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import Skeleton from "@/components/ui/skeleton";
 import { format, isToday, isTomorrow, parseISO } from "date-fns";
 
 const categoryColors = {

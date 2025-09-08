@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { Skeleton } from "@/components/ui/skeleton";
+import Skeleton from "@/components/ui/skeleton";
 
 export default function DemographicsChart({ residents, isLoading }) {
   const data = useMemo(() => {

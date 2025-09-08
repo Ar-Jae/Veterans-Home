@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Popover from "../ui/popover";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import Label from "@/components/ui/label";
+import Textarea from "@/components/ui/textarea";
+import Modal from "../ui/modal";
 import { Plus, X } from "lucide-react";
 
 const PAYMENT_SOURCES = ["VA Per Diem", "State Housing Voucher", "Grant Funding", "Resident Fee", "Donation", "Fundraising", "Other"];
@@ -69,10 +69,8 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
   const showGrantField = formData.payment_source === "Grant Funding";
 
   return (
-    <Popover trigger={<Button><Plus className="w-4 h-4 mr-2" />Record Payment</Button>}>
-      <div className="max-w-2xl max-h-[80vh] overflow-y-auto p-4">
-        <div className="text-2xl font-bold mb-2">Record New Payment</div>
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+    <Modal open={open} onClose={onClose} title="Record New Payment" size="lg">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-2">
           {/* Basic Payment Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -102,29 +100,21 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="payment_source">Payment Source *</Label>
-              <Select onValueChange={(value) => handleInputChange('payment_source', value)} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select payment source" />
-                </SelectTrigger>
-                <SelectContent>
-                  {PAYMENT_SOURCES.map((source) => (
-                    <SelectItem key={source} value={source}>{source}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select id="payment_source" value={formData.payment_source} onChange={e => handleInputChange('payment_source', e.target.value)} required className="px-3 py-2 border rounded w-full">
+                <option value="" disabled>Select payment source</option>
+                {PAYMENT_SOURCES.map((source) => (
+                  <option key={source} value={source}>{source}</option>
+                ))}
+              </select>
             </div>
             <div>
               <Label htmlFor="payment_method">Payment Method</Label>
-              <Select onValueChange={(value) => handleInputChange('payment_method', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select payment method" />
-                </SelectTrigger>
-                <SelectContent>
-                  {PAYMENT_METHODS.map((method) => (
-                    <SelectItem key={method} value={method}>{method}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select id="payment_method" value={formData.payment_method} onChange={e => handleInputChange('payment_method', e.target.value)} className="px-3 py-2 border rounded w-full">
+                <option value="" disabled>Select payment method</option>
+                {PAYMENT_METHODS.map((method) => (
+                  <option key={method} value={method}>{method}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -155,18 +145,12 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
           {showResidentField && (
             <div>
               <Label htmlFor="resident_id">Associated Resident</Label>
-              <Select onValueChange={(value) => handleInputChange('resident_id', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select resident" />
-                </SelectTrigger>
-                <SelectContent>
-                  {residents.map((resident) => (
-                    <SelectItem key={resident.id} value={resident.id}>
-                      {resident.first_name} {resident.last_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select id="resident_id" value={formData.resident_id} onChange={e => handleInputChange('resident_id', e.target.value)} className="px-3 py-2 border rounded w-full">
+                <option value="" disabled>Select resident</option>
+                {residents.map((resident) => (
+                  <option key={resident.id} value={resident.id}>{resident.first_name} {resident.last_name}</option>
+                ))}
+              </select>
             </div>
           )}
 
@@ -196,16 +180,11 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
             <div>
               <Label htmlFor="status">Status</Label>
-              <Select value={formData.status} onValueChange={(value) => handleInputChange('status', value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PAYMENT_STATUSES.map((status) => (
-                    <SelectItem key={status} value={status}>{status}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select id="status" value={formData.status} onChange={e => handleInputChange('status', e.target.value)} className="px-3 py-2 border rounded w-full">
+                {PAYMENT_STATUSES.map((status) => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
             </div>
             <div className="flex items-center space-x-2 mt-6">
               <input
@@ -230,7 +209,6 @@ export default function AddPaymentDialog({ open, onClose, onSubmit, residents = 
             </Button>
           </div>
         </form>
-      </div>
-    </Popover>
+    </Modal>
   );
 }

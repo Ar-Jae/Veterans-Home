@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import Label from "@/components/ui/label";
 // import { Switch } from "@/components/ui/switch"; // Removed, use checkbox instead
 import { Plus, X } from "lucide-react";
-import Popover from "../ui/popover";
+import Modal from "../ui/modal";
 
 const POSITIONS = ["Executive Director", "Program Director", "Case Manager", "House Manager", "Peer Support Mentor", "Cook", "Housekeeper", "Mental Health Liaison"];
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contractor"];
@@ -35,17 +34,27 @@ export default function AddStaffDialog({ open, onClose, onSubmit }) {
   };
 
   return (
-    <Popover trigger={<Button><Plus className="w-4 h-4 mr-2" />Add Staff</Button>}>
-      <div className="max-w-2xl p-4">
-        <div className="text-2xl font-bold mb-2">Add New Staff Member</div>
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+    <Modal open={open} onClose={onClose} title="Add New Staff Member" size="lg">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-2">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><Label htmlFor="first_name">First Name *</Label><Input id="first_name" value={formData.first_name} onChange={(e) => handleInputChange('first_name', e.target.value)} required /></div>
             <div><Label htmlFor="last_name">Last Name *</Label><Input id="last_name" value={formData.last_name} onChange={(e) => handleInputChange('last_name', e.target.value)} required /></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><Label htmlFor="position">Position *</Label><Select onValueChange={(v) => handleInputChange('position', v)} required><SelectTrigger><SelectValue placeholder="Select position" /></SelectTrigger><SelectContent>{POSITIONS.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent></Select></div>
-            <div><Label htmlFor="employment_type">Employment Type *</Label><Select onValueChange={(v) => handleInputChange('employment_type', v)} required><SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger><SelectContent>{EMPLOYMENT_TYPES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent></Select></div>
+            <div>
+              <Label htmlFor="position">Position *</Label>
+              <select id="position" value={formData.position} onChange={e => handleInputChange('position', e.target.value)} required className="px-3 py-2 border rounded w-full">
+                <option value="" disabled>Select position</option>
+                {POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="employment_type">Employment Type *</Label>
+              <select id="employment_type" value={formData.employment_type} onChange={e => handleInputChange('employment_type', e.target.value)} required className="px-3 py-2 border rounded w-full">
+                <option value="" disabled>Select type</option>
+                {EMPLOYMENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><Label htmlFor="phone">Phone</Label><Input id="phone" type="tel" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} /></div>
@@ -69,7 +78,6 @@ export default function AddStaffDialog({ open, onClose, onSubmit }) {
             <Button type="submit" disabled={isSubmitting} className="bg-navy-600 hover:bg-navy-700"><Plus className="w-4 h-4 mr-2" />{isSubmitting ? "Saving..." : "Save Staff Member"}</Button>
           </div>
         </form>
-      </div>
-    </Popover>
+    </Modal>
   );
 }

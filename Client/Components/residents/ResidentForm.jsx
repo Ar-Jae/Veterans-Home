@@ -4,7 +4,6 @@ import Input from "@/components/ui/input";
 import Textarea from "@/components/ui/textarea";
 import Button from "@/components/ui/button";
 import Label from "@/components/ui/label";
-import Select from "@/components/ui/select";
 import { UserPlus, X } from "lucide-react";
 
 const SERVICE_BRANCHES = ["Army", "Navy", "Air Force", "Marines", "Coast Guard", "Space Force"];
@@ -94,21 +93,12 @@ export default function ResidentForm({ resident, onSubmit, onCancel }) {
             
             <div className="space-y-2">
               <Label htmlFor="service_branch">Service Branch</Label>
-              <Select
-                value={formData.service_branch}
-                onValueChange={(value) => handleInputChange('service_branch', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select branch" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SERVICE_BRANCHES.map((branch) => (
-                    <SelectItem key={branch} value={branch}>
-                      {branch}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select id="service_branch" value={formData.service_branch} onChange={e => handleInputChange('service_branch', e.target.value)} className="px-3 py-2 border rounded-lg">
+                <option value="" disabled>Select branch</option>
+                {SERVICE_BRANCHES.map((branch) => (
+                  <option key={branch} value={branch}>{branch}</option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -116,22 +106,12 @@ export default function ResidentForm({ resident, onSubmit, onCancel }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="room_number">Room Number *</Label>
-              <Select
-                value={formData.room_number}
-                onValueChange={(value) => handleInputChange('room_number', value)}
-                required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select room" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ROOM_OPTIONS.map((room) => (
-                    <SelectItem key={room} value={room}>
-                      Room {room} (Floor {room[0]})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <select id="room_number" value={formData.room_number} onChange={e => handleInputChange('room_number', e.target.value)} required className="px-3 py-2 border rounded-lg">
+                <option value="" disabled>Select room</option>
+                {ROOM_OPTIONS.map((room) => (
+                  <option key={room} value={room}>Room {room} (Floor {room[0]})</option>
+                ))}
+              </select>
             </div>
             
             <div className="space-y-2">
@@ -192,20 +172,12 @@ export default function ResidentForm({ resident, onSubmit, onCancel }) {
           {/* Status */}
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
-            <Select
-              value={formData.status}
-              onValueChange={(value) => handleInputChange('status', value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="temporary_leave">Temporary Leave</SelectItem>
-                <SelectItem value="medical_leave">Medical Leave</SelectItem>
-                <SelectItem value="discharged">Discharged</SelectItem>
-              </SelectContent>
-            </Select>
+            <select id="status" value={formData.status} onChange={e => handleInputChange('status', e.target.value)} className="px-3 py-2 border rounded-lg">
+              <option value="active">Active</option>
+              <option value="temporary_leave">Temporary Leave</option>
+              <option value="medical_leave">Medical Leave</option>
+              <option value="discharged">Discharged</option>
+            </select>
           </div>
 
           {/* Actions */}

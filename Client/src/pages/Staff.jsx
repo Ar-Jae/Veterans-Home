@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Plus, UserCheck } from "lucide-react";
 import StaffCard from "@/components/staff/StaffCard";
 import AddStaffDialog from "@/components/staff/AddStaffDialog";

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Popover from "../ui/popover";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import Label from "@/components/ui/label";
+import Textarea from "@/components/ui/textarea";
+import Modal from "../ui/modal";
 import { Plus, X } from "lucide-react";
 
 const MILITARY_BRANCHES = ["Army", "Navy", "Air Force", "Marines", "Coast Guard", "Space Force"];
@@ -84,13 +84,8 @@ export default function AddResidentDialog({ open, onClose, onSubmit }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Add New Resident</DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+    <Modal open={open} onClose={onClose} title="Add New Resident" size="lg">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-2">
           {/* Personal Information */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
@@ -171,16 +166,12 @@ export default function AddResidentDialog({ open, onClose, onSubmit }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="military_branch">Branch</Label>
-                <Select onValueChange={(value) => handleInputChange('military_branch', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select branch" />
-                  </SelectTrigger>
-                  <SelectContent>
+                  <select id="military_branch" value={formData.military_branch} onChange={e => handleInputChange('military_branch', e.target.value)}>
+                    <option value="" disabled>Select branch</option>
                     {MILITARY_BRANCHES.map((branch) => (
-                      <SelectItem key={branch} value={branch}>{branch}</SelectItem>
+                      <option key={branch} value={branch}>{branch}</option>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </select>
               </div>
               <div>
                 <Label htmlFor="service_dates">Service Dates</Label>
@@ -193,16 +184,12 @@ export default function AddResidentDialog({ open, onClose, onSubmit }) {
               </div>
               <div>
                 <Label htmlFor="discharge_type">Discharge Type</Label>
-                <Select onValueChange={(value) => handleInputChange('discharge_type', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
+                  <select id="discharge_type" value={formData.discharge_type} onChange={e => handleInputChange('discharge_type', e.target.value)}>
+                    <option value="" disabled>Select type</option>
                     {DISCHARGE_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                      <option key={type} value={type}>{type}</option>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </select>
               </div>
             </div>
           </div>
@@ -246,29 +233,21 @@ export default function AddResidentDialog({ open, onClose, onSubmit }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="employment_status">Employment Status</Label>
-                <Select onValueChange={(value) => handleInputChange('employment_status', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {EMPLOYMENT_STATUS.map((status) => (
-                      <SelectItem key={status} value={status}>{status}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <select id="employment_status" value={formData.employment_status} onChange={e => handleInputChange('employment_status', e.target.value)} className="px-3 py-2 border rounded w-full">
+                  <option value="" disabled>Select status</option>
+                  {EMPLOYMENT_STATUS.map((status) => (
+                    <option key={status} value={status}>{status}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <Label htmlFor="referral_source">Referral Source</Label>
-                <Select onValueChange={(value) => handleInputChange('referral_source', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="How did they find us?" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {REFERRAL_SOURCES.map((source) => (
-                      <SelectItem key={source} value={source}>{source}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <select id="referral_source" value={formData.referral_source} onChange={e => handleInputChange('referral_source', e.target.value)} className="px-3 py-2 border rounded w-full">
+                  <option value="" disabled>How did they find us?</option>
+                  {REFERRAL_SOURCES.map((source) => (
+                    <option key={source} value={source}>{source}</option>
+                  ))}
+                </select>
               </div>
             </div>
             
@@ -295,17 +274,6 @@ export default function AddResidentDialog({ open, onClose, onSubmit }) {
             </Button>
           </div>
         </form>
-      </DialogContent>
-      
-      <style jsx>{`
-        .bg-navy-600 {
-          background-color: #475569;
-        }
-        
-        .hover\\:bg-navy-700:hover {
-          background-color: #334155;
-        }
-      `}</style>
-    </Dialog>
+    </Modal>
   );
 }

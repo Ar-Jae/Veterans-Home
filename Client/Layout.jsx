@@ -51,7 +51,7 @@ const navigationItems = [
   // New sidebar items
   {
     title: "Finance",
-    url: createPageUrl("Finance"),
+    url: createPageUrl("Finances"),
     icon: Building, // Replace with a finance icon if available
   },
   {

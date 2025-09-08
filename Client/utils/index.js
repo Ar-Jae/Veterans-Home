@@ -7,8 +7,13 @@ export function createPageUrl(name){
     FloorPlan: '/floorplan',
     Activities: '/activities',
     Maintenance: '/maintenance',
-    AddResident: '/add-resident',
-    Meals: '/meals'
+  AddResident: '/add-resident',
+  Meals: '/meals',
+  Finances: '/finances',
+  Incidents: '/incidents',
+  Payments: '/payments',
+  Reports: '/reports',
+  Staff: '/staff'
   }
   return map[name] || '/'
 }

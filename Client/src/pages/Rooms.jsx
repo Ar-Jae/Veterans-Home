@@ -1,8 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Stack, Avatar, Button, Box } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/react";
-import { SimpleGrid } from "@chakra-ui/react";
+import { Stack, Avatar, Button, Box, SimpleGrid } from "@chakra-ui/react";
 import logo from "@/assets/Honor Haven Veterans Home Logo2.jpg";
 
 export default function Rooms() {
@@ -114,19 +112,18 @@ export default function Rooms() {
                           )}
                           {!isOccupied && (
                             <>
-                              <Select
-                                placeholder="Select resident"
-                                size="sm"
-                                mb="1"
+                              <select
                                 value={selectedResident[r.id] || ""}
                                 onChange={e => setSelectedResident(prev => ({ ...prev, [r.id]: e.target.value }))}
+                                className="px-2 py-1 border rounded w-full mb-1"
                               >
+                                <option value="" disabled>Select resident</option>
                                 {residents.map(res => (
                                   <option value={res._id} key={res._id}>
                                     {res.name || (res.first_name + ' ' + res.last_name)}
                                   </option>
                                 ))}
-                              </Select>
+                              </select>
                               <Box width="100%" display="flex" justifyContent="center" mt="auto">
                                 <Button
                                   colorScheme="blue"

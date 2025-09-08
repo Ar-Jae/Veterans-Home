@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 // import { Incident } from "@/entities/all"; // Removed: file does not exist
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Plus, AlertTriangle } from "lucide-react";
 import IncidentCard from "../../Components/incidents/IncidentCard";
 import AddIncidentDialog from "../../Components/incidents/AddIncidentDialog";

@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import Badge from "@/components/ui/badge";
+import Skeleton from "@/components/ui/skeleton";
 import { format } from "date-fns";
 
 const sourceColors = {

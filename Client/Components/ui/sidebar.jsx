@@ -12,7 +12,7 @@ const navItems = [
   { label: "Maintenance", icon: FiTool, href: "/maintenance" },
   { label: "Meal Planning", icon: FiTool, href: "/meals" },
   // New sidebar items
-  { label: "Finance", icon: FiTool, href: "/finance" },
+  { label: "Finance", icon: FiTool, href: "/finances" },
   { label: "Incidents", icon: FiTool, href: "/incidents" },
   { label: "Payments", icon: FiTool, href: "/payments" },
   { label: "Reports", icon: FiTool, href: "/reports" },

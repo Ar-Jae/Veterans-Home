@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Popover from "../ui/popover";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import Label from "@/components/ui/label";
+import Textarea from "@/components/ui/textarea";
+import Modal from "../ui/modal";
 import { Plus, X } from "lucide-react";
 
 const INCIDENT_TYPES = ["Medical Emergency", "Behavioral Issue", "Property Damage", "Policy Violation", "Safety Concern", "Other"];
@@ -33,17 +33,31 @@ export default function AddIncidentDialog({ open, onClose, onSubmit }) {
   };
 
   return (
-    <Popover trigger={<Button><Plus className="w-4 h-4 mr-2" />Log Incident</Button>}>
-      <div className="max-w-2xl p-4">
-        <div className="text-2xl font-bold mb-2">Log New Incident</div>
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+    <Modal open={open} onClose={onClose} title="Log New Incident" size="lg">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-2">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><Label htmlFor="date">Date *</Label><Input id="date" type="date" value={formData.date} onChange={(e) => handleInputChange('date', e.target.value)} required /></div>
             <div><Label htmlFor="time">Time *</Label><Input id="time" type="time" value={formData.time} onChange={(e) => handleInputChange('time', e.target.value)} required /></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><Label htmlFor="type">Incident Type *</Label><Select onValueChange={(v) => handleInputChange('type', v)} required><SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger><SelectContent>{INCIDENT_TYPES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent></Select></div>
-            <div><Label htmlFor="severity">Severity *</Label><Select onValueChange={(v) => handleInputChange('severity', v)} required><SelectTrigger><SelectValue placeholder="Select severity" /></SelectTrigger><SelectContent>{SEVERITY_LEVELS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
+            <div>
+              <Label htmlFor="type">Incident Type *</Label>
+              <select id="type" value={formData.type} onChange={e => handleInputChange('type', e.target.value)} required className="px-3 py-2 border rounded w-full">
+                <option value="" disabled>Select type</option>
+                {INCIDENT_TYPES.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <Label htmlFor="severity">Severity *</Label>
+              <select id="severity" value={formData.severity} onChange={e => handleInputChange('severity', e.target.value)} required className="px-3 py-2 border rounded w-full">
+                <option value="" disabled>Select severity</option>
+                {SEVERITY_LEVELS.map(s => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
           </div>
           <div><Label htmlFor="description">Description *</Label><Textarea id="description" value={formData.description} onChange={(e) => handleInputChange('description', e.target.value)} required /></div>
           <div><Label htmlFor="actions_taken">Actions Taken</Label><Textarea id="actions_taken" value={formData.actions_taken} onChange={(e) => handleInputChange('actions_taken', e.target.value)} /></div>
@@ -53,7 +67,6 @@ export default function AddIncidentDialog({ open, onClose, onSubmit }) {
             <Button type="submit" disabled={isSubmitting} className="bg-red-600 hover:bg-red-700"><Plus className="w-4 h-4 mr-2" />{isSubmitting ? "Logging..." : "Log Incident"}</Button>
           </div>
         </form>
-      </div>
-    </Popover>
+    </Modal>
   );
 }
