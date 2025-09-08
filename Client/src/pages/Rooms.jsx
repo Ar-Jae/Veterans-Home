@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Stack, Avatar, Button, Box } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
 import { SimpleGrid } from "@chakra-ui/react";
+import logo from "@/assets/Honor Haven Veterans Home Logo2.jpg";
 
 export default function Rooms() {
   const [assigning, setAssigning] = useState({});
@@ -67,6 +68,9 @@ export default function Rooms() {
   return (
   <Box minHeight="100vh" width="auto" bgGradient="linear(to-br, #f3f4f6, #e0e7ff, #c7d2fe)" fontFamily="inherit">
       <Box maxWidth="1200px" mx="auto" py="10">
+        <Box display="flex" justifyContent="center" mb="6">
+          <img src={logo} alt="Honor Haven Veterans Home Logo" style={{ height: 80 }} />
+        </Box>
         <Box as="h1" fontSize="2xl" fontWeight="bold" color="#222" mb="8" letterSpacing="-1px">Rooms</Box>
         <Box as="section">
           {rooms.length === 0 ? (
