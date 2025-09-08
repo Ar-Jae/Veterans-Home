@@ -13,12 +13,19 @@ export default function Rooms() {
     if (!residentId) return;
     setAssigning(prev => ({ ...prev, [roomId]: true }));
     try {
-      await fetch(`http://localhost:4000/api/residents/${residentId}`, {
+      // Assign resident to room
+      await fetch(`http://localhost:4000/api/residents/${residentId}/assign-room`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ room_number: roomNumber })
+        body: JSON.stringify({ roomId: roomId })
       });
-      // Optionally, refresh rooms and residents
+      // Mark room as occupied in the database
+      await fetch(`http://localhost:4000/api/rooms/${roomId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ occupied: true })
+      });
+      // Refresh rooms and residents
       const roomsRes = await fetch('http://localhost:4000/api/rooms');
       const roomsData = await roomsRes.json();
       setRooms(roomsData.map(room => ({
@@ -58,7 +65,7 @@ export default function Rooms() {
   }, []);
 
   return (
-    <Box minHeight="100vh" bg="#fff" fontFamily="inherit">
+  <Box minHeight="100vh" width="auto" bgGradient="linear(to-br, #f3f4f6, #e0e7ff, #c7d2fe)" fontFamily="inherit">
       <Box maxWidth="1200px" mx="auto" py="10">
         <Box as="h1" fontSize="2xl" fontWeight="bold" color="#222" mb="8" letterSpacing="-1px">Rooms</Box>
         <Box as="section">
@@ -110,13 +117,13 @@ export default function Rooms() {
                                 value={selectedResident[r.id] || ""}
                                 onChange={e => setSelectedResident(prev => ({ ...prev, [r.id]: e.target.value }))}
                               >
-                                {residents.filter(res => !res.room_number && !res.room).map(res => (
+                                {residents.map(res => (
                                   <option value={res._id} key={res._id}>
                                     {res.name || (res.first_name + ' ' + res.last_name)}
                                   </option>
                                 ))}
                               </Select>
-                              <Stack direction="row" spacing="1" mt="auto">
+                              <Box width="100%" display="flex" justifyContent="center" mt="auto">
                                 <Button
                                   colorScheme="blue"
                                   size="sm"
@@ -124,9 +131,9 @@ export default function Rooms() {
                                   onClick={() => handleAssign(r.id, r.number)}
                                   isDisabled={!selectedResident[r.id]}
                                 >
-                                  Join
+                                  Assign Room
                                 </Button>
-                              </Stack>
+                              </Box>
                             </>
                           )}
                         </Box>
