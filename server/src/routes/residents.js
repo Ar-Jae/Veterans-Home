@@ -58,4 +58,37 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+// Assign a room to a resident
+const Room = require('../models/Room');
+router.patch('/:id/assign-room', async (req, res) => {
+  try {
+    const residentId = req.params.id;
+    const { roomId } = req.body;
+    if (!roomId) return res.status(400).json({ error: 'roomId required' });
+
+    // Find room
+    const room = await Room.findById(roomId);
+    if (!room) return res.status(404).json({ error: 'Room not found' });
+
+    // Update resident with room info
+    const roomNumber = room.room_number || room.number;
+    const resident = await Resident.findByIdAndUpdate(
+      residentId,
+      { room_number: roomNumber, room: roomNumber },
+      { new: true }
+    );
+    if (!resident) return res.status(404).json({ error: 'Resident not found' });
+
+    // Mark room as occupied
+    room.occupied = 1;
+    await room.save();
+
+    res.json({ resident, room });
+  } catch (err) {
+    console.error('PATCH /residents/:id/assign-room error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router

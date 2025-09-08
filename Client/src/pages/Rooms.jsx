@@ -1,79 +1,82 @@
-import React, { useEffect, useState } from 'react'
 
+import React, { useEffect, useState } from 'react';
 
-export default function Rooms(){
+export default function Rooms() {
   const [rooms, setRooms] = useState([]);
-
+  const [residents, setResidents] = useState([]);
   useEffect(() => {
     fetch('http://localhost:4000/api/rooms')
       .then(res => res.json())
       .then(data => {
-        // Map backend data to UI format if needed
         setRooms(data.map(room => ({
           id: room._id,
           number: room.room_number || room.number,
           type: room.type || (room.capacity === 2 ? 'Double' : 'Single'),
           capacity: room.capacity,
           occupied: room.occupied,
-          occupant: '', // You can extend this if you have occupant info
+          occupant: '',
         })));
       });
+    fetch('http://localhost:4000/api/residents')
+      .then(res => res.json())
+      .then(data => setResidents(data));
   }, []);
 
-  // ...existing code...
-
-  function handleChange(e){
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: name === 'capacity' ? Number(value) : value }))
-  }
-
-  // Add/remove/toggle functions should be updated to use backend if needed
-  // For now, only display live data
-
   return (
-    <div style={{
-      minHeight:'100vh',
-      background:'linear-gradient(120deg,#f3f4f6 0%,#e0e7ff 100%)',
-      padding:'0',
-    }}>
-      <div style={{maxWidth:1200,margin:'0 auto',padding:'0'}}>
-        <h1 style={{
-          fontSize:'2.2rem',
-          fontWeight:800,
-          background:'linear-gradient(90deg,#6366f1 0%,#60a5fa 100%)',
-          WebkitBackgroundClip:'text',
-          WebkitTextFillColor:'transparent',
-          marginBottom:24,
-          letterSpacing:'-1px',
-        }}>Rooms</h1>
-
-
-
+    <div style={{minHeight:'100vh',background:'#fff',fontFamily:'inherit'}}>
+      <div style={{maxWidth:1200,margin:'0 auto',padding:'2.5rem 0'}}>
+        <h1 style={{fontSize:'2rem',fontWeight:700,color:'#222',marginBottom:32,letterSpacing:'-1px'}}>Rooms</h1>
         <section>
-          <h2 style={{fontWeight:700,fontSize:'1.1rem',marginBottom:10,color:'#374151'}}>Room list</h2>
           {rooms.length === 0 ? (
             <p style={{fontSize:'1rem',color:'#64748b'}}>No rooms configured.</p>
           ) : (
-            <ul style={{display:'flex',flexDirection:'column',gap:16}}>
-              {rooms.map(r => (
-                <li key={r.id} style={{padding:'1.2rem',background:'#fff',borderRadius:12,boxShadow:'0 2px 8px 0 rgba(60,72,100,0.04)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <div>
-                    <div style={{fontWeight:600,fontSize:'1.08rem',color:'#374151'}}>{r.number} <span style={{fontSize:'0.98rem',color:'#6366f1',marginLeft:8}}>{r.type}</span></div>
-                    <div style={{fontSize:'0.98rem',color:'#64748b',marginTop:4}}>Capacity: {r.capacity} • <span style={{color:r.occupied?'#34d399':'#fbbf24',fontWeight:600}}>{r.occupied ? 'Occupied' : 'Available'}</span></div>
-                    {r.occupied && r.occupant && (
-                      <div style={{fontSize:'0.98rem',color:'#2563eb',marginTop:4}}><strong>Occupant:</strong> {r.occupant}</div>
-                    )}
-                  </div>
-                  <div style={{display:'flex',gap:10}}>
-                    <button onClick={() => toggleOccupied(r.id)} style={{fontSize:'0.98rem',color:r.occupied?'#fbbf24':'#34d399',fontWeight:600,background:'none',border:'none',cursor:'pointer',textDecoration:'underline'}}>{r.occupied ? 'Vacate' : 'Occupy'}</button>
-                    <button onClick={() => removeRoom(r.id)} style={{fontSize:'0.98rem',color:'#ef4444',fontWeight:600,background:'none',border:'none',cursor:'pointer',textDecoration:'underline'}}>Remove</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <div style={{display:'flex',gap:'32px',marginTop:'8px',alignItems:'flex-start'}}>
+              <div style={{flex:1}}>
+                <h3 style={{fontWeight:700,fontSize:'1rem',marginBottom:8,color:'#6366f1'}}>First Floor (1A–1J)</h3>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(2, minmax(160px, 1fr))',gap:'18px'}}>
+                  {rooms.filter(r => /^1[A-J]$/.test(r.number)).map(r => {
+                    const occupant = residents.find(res => (res.room_number === r.number || res.room === r.number));
+                    const isOccupied = r.occupied && occupant;
+                    return (
+                      <div key={r.id} style={{padding:'1rem',background:'#fff',borderRadius:10,boxShadow:'0 2px 8px 0 rgba(60,72,100,0.07)',display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'space-between',minHeight:90,border:isOccupied?'2px solid #34d399':'2px solid #e5e7eb'}}>
+                        <div style={{fontWeight:600,fontSize:'1.08rem',color:'#374151',marginBottom:2}}>{r.number} <span style={{fontSize:'0.98rem',color:'#6366f1',marginLeft:8}}>{r.type}</span></div>
+                        <div style={{fontSize:'0.95rem',color:'#64748b',marginBottom:4}}>Capacity: {r.capacity}</div>
+                        <div style={{fontSize:'0.95rem',color:isOccupied?'#34d399':'#fbbf24',fontWeight:600,marginBottom:4}}>{isOccupied?'Occupied':'Available'}</div>
+                        {isOccupied && (
+                          <div style={{fontSize:'0.95rem',color:'#2563eb',marginBottom:2}}>
+                            <strong>Occupant:</strong> {occupant.name || occupant.first_name + ' ' + occupant.last_name}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div style={{flex:1}}>
+                <h3 style={{fontWeight:700,fontSize:'1rem',marginBottom:8,color:'#6366f1'}}>Second Floor (2A–2J)</h3>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(2, minmax(160px, 1fr))',gap:'18px'}}>
+                  {rooms.filter(r => /^2[A-J]$/.test(r.number)).map(r => {
+                    const occupant = residents.find(res => (res.room_number === r.number || res.room === r.number));
+                    const isOccupied = r.occupied && occupant;
+                    return (
+                      <div key={r.id} style={{padding:'1rem',background:'#fff',borderRadius:10,boxShadow:'0 2px 8px 0 rgba(60,72,100,0.07)',display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'space-between',minHeight:90,border:isOccupied?'2px solid #34d399':'2px solid #e5e7eb'}}>
+                        <div style={{fontWeight:600,fontSize:'1.08rem',color:'#374151',marginBottom:2}}>{r.number} <span style={{fontSize:'0.98rem',color:'#6366f1',marginLeft:8}}>{r.type}</span></div>
+                        <div style={{fontSize:'0.95rem',color:'#64748b',marginBottom:4}}>Capacity: {r.capacity}</div>
+                        <div style={{fontSize:'0.95rem',color:isOccupied?'#34d399':'#fbbf24',fontWeight:600,marginBottom:4}}>{isOccupied?'Occupied':'Available'}</div>
+                        {isOccupied && (
+                          <div style={{fontSize:'0.95rem',color:'#2563eb',marginBottom:2}}>
+                            <strong>Occupant:</strong> {occupant.name || occupant.first_name + ' ' + occupant.last_name}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           )}
         </section>
       </div>
     </div>
-  )
+  );
 }

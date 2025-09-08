@@ -10,7 +10,7 @@ import {
   ChefHat,
   Map,
 } from "lucide-react";
-import Sidebar from "./components/ui/sidebar.jsx";
+import Sidebar from "./Components/ui/sidebar.jsx";
 
 const navigationItems = [
   {
@@ -63,7 +63,7 @@ export default function Layout({ children, currentPageName }) {
               <Home style={{ width: 24, height: 24, color: '#fff' }} />
             </div>
             <div>
-              <h2 style={{ fontWeight: 900, color: '#222', fontSize: '1.25rem', marginBottom: 2, letterSpacing: '-1px', textShadow: '0 2px 8px rgba(60,72,100,0.10)' }}>Veterans Home</h2>
+              <h2 style={{ fontWeight: 900, color: '#222', fontSize: '1.25rem', marginBottom: 2, letterSpacing: '-1px', textShadow: '0 2px 8px rgba(60,72,100,0.10)' }}>Honor Haven Veterans Home</h2>
               <p style={{ fontSize: '0.85rem', color: '#222', fontWeight: 600, textShadow: '0 2px 8px rgba(60,72,100,0.10)' }}>Management System</p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontWeight: 700, color: '#222', fontSize: '1rem', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 2px 8px rgba(60,72,100,0.10)' }}>Staff Member</p>
-              <p style={{ fontSize: '0.85rem', color: '#222', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 2px 8px rgba(60,72,100,0.10)' }}>Veterans Home Staff</p>
+              <p style={{ fontSize: '0.85rem', color: '#222', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textShadow: '0 2px 8px rgba(60,72,100,0.10)' }}>Honor Haven Staff</p>
             </div>
           </div>
         </div>

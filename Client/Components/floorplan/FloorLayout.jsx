@@ -132,8 +132,8 @@ const Floor1Layout = ({ rooms, residents }) => {
                 </div>
                 <div className="text-gray-700 font-semibold mb-1">Recent Residents:</div>
                 <div className="flex flex-col gap-1">
-                    {residents.slice(0, 3).map(r => (
-                        <div key={r.id} className="flex items-center gap-2 text-gray-800">
+                    {residents.slice(0, 3).map((r, idx) => (
+                        <div key={r.id || `${r.room || r.room_number}-${idx}`} className="flex items-center gap-2 text-gray-800">
                             <span className="text-gray-400"><svg width="18" height="18" fill="none"><circle cx="9" cy="6" r="3" fill="#CBD5E1"/><rect x="4" y="11" width="10" height="5" rx="2.5" fill="#CBD5E1"/></svg></span>
                             <span className="font-semibold">{r.name || `${r.first_name} ${r.last_name}`}</span>
                             <span className="text-gray-500">- Room {r.room || r.room_number}</span>
@@ -145,18 +145,18 @@ const Floor1Layout = ({ rooms, residents }) => {
                 <div className="flex flex-row items-end gap-1">
                     <Wing rooms={config.leftWing.bedrooms} residents={residents} />
                     <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
-                        {config.leftWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                        {config.leftWing.bathrooms.map((b, idx) => <CommonArea key={b.id || `bathroom-left-${idx}`} room={b} />)}
                     </div>
                 </div>
                 <div className="flex flex-col items-center gap-4 pt-10">
                     <div className="flex flex-col items-center gap-1">
-                        {config.centerTop.map(c => <CommonArea key={c.id} room={c} />)}
+                        {config.centerTop.map((c, idx) => <CommonArea key={c.id || `center-top-${idx}`} room={c} />)}
                     </div>
-                    {config.centerMain.map(c => <CommonArea key={c.id} room={c} />)}
+                    {config.centerMain.map((c, idx) => <CommonArea key={c.id || `center-main-${idx}`} room={c} />)}
                 </div>
                 <div className="flex flex-row items-end gap-1">
                     <div className="flex flex-col justify-around h-full pb-1 pt-12 gap-1">
-                        {config.rightWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                        {config.rightWing.bathrooms.map((b, idx) => <CommonArea key={b.id || `bathroom-right-${idx}`} room={b} />)}
                     </div>
                     <Wing rooms={config.rightWing.bedrooms} residents={residents} />
                 </div>
@@ -188,8 +188,8 @@ const Floor2Layout = ({ rooms, residents }) => {
                 </div>
                 <div className="text-gray-700 font-semibold mb-1">Recent Residents:</div>
                 <div className="flex flex-col gap-1">
-                    {residents.slice(0, 3).map(r => (
-                        <div key={r.id} className="flex items-center gap-2 text-gray-800">
+                    {residents.slice(0, 3).map((r, idx) => (
+                        <div key={r.id || `${r.room || r.room_number}-${idx}`} className="flex items-center gap-2 text-gray-800">
                             <span className="text-gray-400"><svg width="18" height="18" fill="none"><circle cx="9" cy="6" r="3" fill="#CBD5E1"/><rect x="4" y="11" width="10" height="5" rx="2.5" fill="#CBD5E1"/></svg></span>
                             <span className="font-semibold">{r.name || `${r.first_name} ${r.last_name}`}</span>
                             <span className="text-gray-500">- Room {r.room || r.room_number}</span>
@@ -199,26 +199,26 @@ const Floor2Layout = ({ rooms, residents }) => {
             </div>
             <div className="flex flex-row justify-around items-start gap-4 p-4">
                 <div className="flex flex-col items-center gap-4 pt-10">
-                    {config.leftWing.map(c => <CommonArea key={c.id} room={c} />)}
+                    {config.leftWing.map((c, idx) => <CommonArea key={c.id || `leftWing-${idx}`} room={c} />)}
                 </div>
                 <div className="flex flex-row items-end gap-1">
                     <Wing rooms={config.centerWing.bedrooms} residents={residents} />
                     <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
-                        {config.centerWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                        {config.centerWing.bathrooms.map((b, idx) => <CommonArea key={b.id || `centerWing-bathroom-${idx}`} room={b} />)}
                     </div>
                 </div>
                 <div className="flex flex-col items-center gap-4 pt-10">
                     <div className="flex flex-row items-end gap-1">
                         <div className="flex flex-col items-center gap-2">
-                            {config.rightWing.main.map(c => <CommonArea key={c.id} room={c} />)}
+                            {config.rightWing.main.map((c, idx) => <CommonArea key={c.id || `rightWing-main-${idx}`} room={c} />)}
                         </div>
                         <div className="flex flex-col justify-between h-full pb-1 pt-12 gap-1">
-                            {config.rightWing.bathrooms.map(b => <CommonArea key={b.id} room={b} />)}
+                            {config.rightWing.bathrooms.map((b, idx) => <CommonArea key={b.id || `rightWing-bathroom-${idx}`} room={b} />)}
                         </div>
                         <Wing rooms={config.rightWing.bedrooms} residents={residents} />
                     </div>
                     <div className="flex flex-row gap-1">
-                        {config.bottomBath.map(c => <CommonArea key={c.id} room={c} />)}
+                        {config.bottomBath.map((c, idx) => <CommonArea key={c.id || `bottomBath-${idx}`} room={c} />)}
                     </div>
                 </div>
             </div>

@@ -34,7 +34,7 @@ export default function Sidebar() {
           <Icon as={FiHome} boxSize={7} color="white" />
         </Box>
         <Box>
-          <Text fontWeight={900} fontSize="xl" color="gray.900" mb={1} letterSpacing={-1}>Veterans Home</Text>
+          <Text fontWeight={900} fontSize="xl" color="gray.900" mb={1} letterSpacing={-1}>Honor Haven Veterans Home</Text>
           <Text fontSize="sm" color="blue.500" fontWeight={600}>Management System</Text>
         </Box>
       </Flex>
@@ -87,7 +87,7 @@ export default function Sidebar() {
           <Avatar name="Staff Member" size="sm" bgGradient="linear(to-r, blue.500, blue.400)" color="white" />
           <Box minW={0}>
             <Text fontWeight={700} color="gray.900" fontSize="md" mb={0.5} noOfLines={1}>Staff Member</Text>
-            <Text fontSize="sm" color="gray.500" noOfLines={1}>Veterans Home Staff</Text>
+            <Text fontSize="sm" color="gray.500" noOfLines={1}>Honor Haven Staff</Text>
           </Box>
         </HStack>
       </Box>

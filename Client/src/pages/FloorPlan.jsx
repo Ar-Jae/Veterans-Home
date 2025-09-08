@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
+import { CardTitle, CardContent } from "@/Components/main-ui/card.jsx";
 import { Skeleton } from "@chakra-ui/react";
 import { Building, Users, Wrench, CheckCircle } from "lucide-react";
 
-import FloorLayout from "@/Components/floorplan/FloorLayout";
+import FloorLayout from "@/Components/floorplan/FloorLayout.jsx";
 import Legend from "@/Components/floorplan/Legend";
 
 export default function FloorPlanPage() {
@@ -20,10 +21,12 @@ export default function FloorPlanPage() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [roomsData, residentsData] = await Promise.all([
-        Room.list(),
-        Resident.list(),
+      const [roomsRes, residentsRes] = await Promise.all([
+        fetch('http://localhost:4000/api/rooms'),
+        fetch('http://localhost:4000/api/residents'),
       ]);
+      const roomsData = await roomsRes.json();
+      const residentsData = await residentsRes.json();
       setRooms(roomsData);
       setResidents(residentsData);
     } catch (error) {

@@ -1,4 +1,4 @@
-# Veterans Home — Local dev
+# Honor Haven Veterans Home — Local dev
 
 This workspace uses Vite + React.
 

@@ -41,7 +41,13 @@ export default function FloorOccupancy() {
 
   const getFloorData = (floorNumber) => {
     const floorRooms = Array.isArray(rooms) ? rooms.filter(room => room.floor === floorNumber) : [];
-    const floorResidents = Array.isArray(residents) ? residents.filter(resident => resident.floor === floorNumber) : [];
+    // Find residents assigned to rooms on this floor
+    const floorResidents = Array.isArray(residents)
+      ? residents.filter(resident => {
+          const room = floorRooms.find(r => r.room_number === resident.room_number || r.room_number === resident.room);
+          return room && resident.first_name && resident.last_name;
+        })
+      : [];
     return {
       totalRooms: floorRooms.length,
       occupiedRooms: floorRooms.filter(room => room.occupied > 0).length,
@@ -105,11 +111,15 @@ export default function FloorOccupancy() {
             {data.residents.length === 0 ? (
               <span style={{color:'#9ca3af',fontSize:'0.95rem'}}>No residents</span>
             ) : (
-              data.residents.slice(0,3).map((resident, idx) => (
+              data.residents.map((resident, idx) => (
                 <div key={resident._id || idx} style={{display:'flex',alignItems:'center',gap:8}}>
                   <User style={{color:'#6366f1'}} size={16} />
-                  <span style={{fontWeight:500,color:'#374151',fontSize:'0.95rem'}}>{resident.name}</span>
-                  <span style={{color:'#6b7280',fontSize:'0.95rem'}}>— Room {resident.room_number}</span>
+                  <span style={{fontWeight:500,color:'#374151',fontSize:'0.95rem'}}>
+                    {resident.first_name && resident.last_name
+                      ? `${resident.first_name} ${resident.last_name}`
+                      : resident.name}
+                  </span>
+                  <span style={{color:'#6b7280',fontSize:'0.95rem'}}>— Room {resident.room_number || resident.room}</span>
                 </div>
               ))
             )}

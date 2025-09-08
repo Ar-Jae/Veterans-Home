@@ -27,7 +27,7 @@ const HoverCard = () => {
             <Stack direction="row" gap={4}>
               <Avatar
                 name="Chakra UI"
-                src="https://pbs.twimg.com/profile_images/1244925541448286208/rzylUjaf_400x400.jpg"
+                src="https://dummyimage.com/100x100/cccccc/ffffff&text=No+Image"
                 size="md"
               />
               <Stack gap={3}>

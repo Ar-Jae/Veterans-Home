@@ -1,8 +1,8 @@
 
 import React from 'react'
-import StatsOverview from '@/Components/dashboard/StatsOverview'
-import FloorOccupancy from '@/Components/dashboard/FloorOccupancy'
-import MaintenanceAlerts from '@/Components/dashboard/MaintenanceAlerts'
+import StatsOverview from '@/Components/dashboard/StatsOverview.jsx'
+import FloorOccupancy from '@/Components/dashboard/FloorOccupancy.jsx'
+import MaintenanceAlerts from '@/Components/dashboard/MaintenanceAlerts.jsx'
 
 export default function Dashboard(){
   return (
@@ -22,7 +22,7 @@ export default function Dashboard(){
             marginBottom:6,
             letterSpacing:'-1px',
           }}>Facility Dashboard</h1>
-          <p style={{color:'#64748b',fontSize:'1.1rem',marginTop:2}}>Welcome to the Veterans Home management system</p>
+          <p style={{color:'#64748b',fontSize:'1.1rem',marginTop:2}}>Welcome to the Honor Haven Veterans Home management system</p>
         </header>
 
         <StatsOverview />

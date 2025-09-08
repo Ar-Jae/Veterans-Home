@@ -5,14 +5,14 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     res.json({
-      facilityName: 'Veterans Home',
+  facilityName: 'Honor Haven Veterans Home',
       description: 'Management System',
       totalCapacity: 20,
       floors: 2,
       totalSpace: '10,000 ft²',
       staff: {
         name: 'Staff Member',
-        role: 'Veterans Home Staff',
+  role: 'Honor Haven Staff',
         avatar: 'S'
       }
     });

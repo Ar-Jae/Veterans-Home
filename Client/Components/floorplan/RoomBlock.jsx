@@ -33,11 +33,10 @@ export default function RoomBlock({ style, room, resident, type, className }) {
   );
 
   return (
-    <HoverCard openDelay={100} closeDelay={100}>
-      <HoverCardTrigger asChild>
-        <div>{content}</div>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-60">
+    <HoverCard
+      trigger={<div>{content}</div>}
+    >
+      <div className="w-60">
         <div className="flex justify-between space-x-4">
           <div className="space-y-1">
             <h4 className="text-sm font-semibold">{roomName}</h4>
@@ -69,7 +68,7 @@ export default function RoomBlock({ style, room, resident, type, className }) {
             )}
           </div>
         </div>
-      </HoverCardContent>
+      </div>
     </HoverCard>
   );
 }
