@@ -218,7 +218,7 @@ export default function Residents(){
         </div>
 
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))',gap:24}}>
-          {filteredResidents.map(r=> <ResidentCard key={r.id} r={r} />)}
+          {filteredResidents.map(r=> <ResidentCard key={r.id || `${r.name}-${r.room || ''}`} r={r} />)}
         </div>
       </div>
     </div>

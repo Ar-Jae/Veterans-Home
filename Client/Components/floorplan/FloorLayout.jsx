@@ -1,24 +1,22 @@
 import React from 'react';
-import RoomBlock from './RoomBlock';
-import { Skeleton } from "@chakra-ui/react";
+import { Skeleton, Avatar, Button, Box, Stack } from "@chakra-ui/react";
 
 const Wing = ({ rooms, residents, title }) => (
-    <div className="flex flex-col gap-1">
-        {title && <h4 className="text-sm font-semibold text-center mb-2 text-gray-600">{title}</h4>}
-        <div className="flex flex-col gap-1 p-2 bg-gray-200 border-2 border-gray-300 rounded-lg">
-                        {rooms.map(roomConfig => {
-                                // Support both resident.room_number and resident.room
-                                const resident = roomConfig.type === 'Bedroom'
-                                    ? residents.find(r => (r.room_number || r.room) === roomConfig.room.room_number)
-                                    : null;
-                                return <RoomBlock key={roomConfig.id} {...roomConfig} resident={resident} />;
-                        })}
+    <div className="flex flex-col gap-2">
+        {title && <h4 className="text-lg font-bold text-center mb-3 text-blue-600 drop-shadow">{title}</h4>}
+        <div className="flex flex-col gap-2 p-4 rounded-2xl border-0 bg-gradient-to-br from-blue-100/60 to-indigo-100/40 backdrop-blur-md shadow-lg">
+            {rooms.map(roomConfig => {
+                const resident = roomConfig.type === 'Bedroom'
+                    ? residents.find(r => (r.room_number || r.room) === roomConfig.room.room_number)
+                    : null;
+                return <RoomBlock key={roomConfig.id} {...roomConfig} resident={resident} />;
+            })}
         </div>
     </div>
 );
 
 const CommonArea = ({ room }) => (
-    <div className="p-2 bg-gray-200 border-2 border-gray-300 rounded-lg">
+    <div className="p-3 rounded-2xl border-0 bg-gradient-to-br from-indigo-100/60 to-blue-100/40 backdrop-blur-md shadow-md">
         <RoomBlock {...room} />
     </div>
 );
@@ -113,10 +111,10 @@ const Floor1Layout = ({ rooms, residents }) => {
     // Find maintenance rooms on this floor
     const maintenanceRooms = rooms.filter(r => r.maintenance || r.status === 'maintenance');
     return (
-        <div className="flex flex-col gap-6">
-            <div className="bg-white rounded-xl shadow p-6 mb-2">
-                <div className="flex items-center gap-2 mb-1">
-                    <span className="text-blue-600"><svg width="20" height="20" fill="none"><rect width="20" height="20" rx="4" fill="#EFF6FF"/><path d="M7 8V6a3 3 0 1 1 6 0v2" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="5" y="8" width="10" height="8" rx="2" stroke="#2563EB" strokeWidth="2"/></svg></span>
+    <div className="flex flex-col gap-8">
+            <div className="bg-white/80 rounded-3xl shadow-xl p-8 mb-4 backdrop-blur-lg border border-blue-100">
+                <div className="flex items-center gap-3 mb-2">
+                    <span className="text-blue-600"><svg width="28" height="28" fill="none"><rect width="28" height="28" rx="6" fill="#EFF6FF"/><path d="M10 11V8a4 4 0 1 1 8 0v3" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="7" y="13" width="14" height="11" rx="3" stroke="#2563EB" strokeWidth="2"/></svg></span>
                     <span className="font-bold text-lg text-gray-900">Floor 1</span>
                 </div>
                 <div className="text-gray-500 mb-2">Main hub: meals, gatherings, and staff spaces</div>
@@ -169,10 +167,10 @@ const Floor2Layout = ({ rooms, residents }) => {
     const config = getFloor2Config(rooms);
     const maintenanceRooms = rooms.filter(r => r.maintenance || r.status === 'maintenance');
     return (
-        <div className="flex flex-col gap-6">
-            <div className="bg-white rounded-xl shadow p-6 mb-2">
-                <div className="flex items-center gap-2 mb-1">
-                    <span className="text-blue-600"><svg width="20" height="20" fill="none"><rect width="20" height="20" rx="4" fill="#EFF6FF"/><path d="M7 8V6a3 3 0 1 1 6 0v2" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="5" y="8" width="10" height="8" rx="2" stroke="#2563EB" strokeWidth="2"/></svg></span>
+    <div className="flex flex-col gap-8">
+            <div className="bg-white/80 rounded-3xl shadow-xl p-8 mb-4 backdrop-blur-lg border border-indigo-100">
+                <div className="flex items-center gap-3 mb-2">
+                    <span className="text-indigo-600"><svg width="28" height="28" fill="none"><rect width="28" height="28" rx="6" fill="#EFF6FF"/><path d="M10 11V8a4 4 0 1 1 8 0v3" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="7" y="13" width="14" height="11" rx="3" stroke="#6366f1" strokeWidth="2"/></svg></span>
                     <span className="font-bold text-lg text-gray-900">Floor 2</span>
                 </div>
                 <div className="text-gray-500 mb-2">Quiet spaces: rest, therapy, and personal growth</div>
@@ -228,17 +226,47 @@ const Floor2Layout = ({ rooms, residents }) => {
 
 
 export default function FloorLayout({ floor, rooms, residents, isLoading }) {
-  if (isLoading) {
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-96">
+                <Skeleton className="w-3/4 h-3/4" />
+            </div>
+        );
+    }
+    // Chakra UI interactive floor plan demo
     return (
-        <div className="flex justify-center items-center h-96">
-            <Skeleton className="w-3/4 h-3/4" />
-        </div>
-    )
-  }
-
-  if (floor === 1) {
-      return <Floor1Layout rooms={rooms} residents={residents} />;
-  }
-  
-  return <Floor2Layout rooms={rooms} residents={residents} />;
+        <Stack gap={4} direction="row" wrap="wrap">
+            {["Ballroom", "Lounge", "Hall 3", "Terrace"].map((area, idx) => (
+                <Box
+                    key={area}
+                    width="320px"
+                    borderRadius="lg"
+                    boxShadow="md"
+                    bg="white"
+                    p={4}
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                >
+                    <Avatar size="lg" name={area} mb={2} src={
+                        area === "Ballroom" ? "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+                        : area === "Lounge" ? "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80"
+                        : area === "Hall 3" ? "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80"
+                        : "https://images.unsplash.com/photo-1465101178521-c1a9136a3c8b?auto=format&fit=crop&w=400&q=80"
+                    } />
+                    <Box fontWeight="bold" fontSize="lg" mb={2}>{area}</Box>
+                    <Box color="gray.600" mb={4}>
+                        {area === "Ballroom" && "64.7 ft x 73.5 ft · Capacity 315"}
+                        {area === "Lounge" && "30 ft x 62 ft · Capacity 120"}
+                        {area === "Hall 3" && "25.7 ft x 30 ft · Capacity 53"}
+                        {area === "Terrace" && "Outdoor seating and garden"}
+                    </Box>
+                    <Stack direction="row" spacing={2} mt="auto">
+                        <Button variant="outline">View</Button>
+                        <Button colorScheme="blue">Book</Button>
+                    </Stack>
+                </Box>
+            ))}
+        </Stack>
+    );
 }

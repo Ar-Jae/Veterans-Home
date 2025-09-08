@@ -1,7 +1,42 @@
 
 import React, { useEffect, useState } from 'react';
+import { Stack, Avatar, Button, Box } from "@chakra-ui/react";
+import { Select } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 
 export default function Rooms() {
+  const [assigning, setAssigning] = useState({});
+  const [selectedResident, setSelectedResident] = useState({});
+
+  const handleAssign = async (roomId, roomNumber) => {
+    const residentId = selectedResident[roomId];
+    if (!residentId) return;
+    setAssigning(prev => ({ ...prev, [roomId]: true }));
+    try {
+      await fetch(`http://localhost:4000/api/residents/${residentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ room_number: roomNumber })
+      });
+      // Optionally, refresh rooms and residents
+      const roomsRes = await fetch('http://localhost:4000/api/rooms');
+      const roomsData = await roomsRes.json();
+      setRooms(roomsData.map(room => ({
+        id: room._id,
+        number: room.room_number || room.number,
+        type: room.type || (room.capacity === 2 ? 'Double' : 'Single'),
+        capacity: room.capacity,
+        occupied: room.occupied,
+        occupant: '',
+      })));
+      const resRes = await fetch('http://localhost:4000/api/residents');
+      const resData = await resRes.json();
+      setResidents(resData);
+    } catch (e) {
+      alert('Failed to assign resident.');
+    }
+    setAssigning(prev => ({ ...prev, [roomId]: false }));
+  };
   const [rooms, setRooms] = useState([]);
   const [residents, setResidents] = useState([]);
   useEffect(() => {
@@ -23,60 +58,87 @@ export default function Rooms() {
   }, []);
 
   return (
-    <div style={{minHeight:'100vh',background:'#fff',fontFamily:'inherit'}}>
-      <div style={{maxWidth:1200,margin:'0 auto',padding:'2.5rem 0'}}>
-        <h1 style={{fontSize:'2rem',fontWeight:700,color:'#222',marginBottom:32,letterSpacing:'-1px'}}>Rooms</h1>
-        <section>
+    <Box minHeight="100vh" bg="#fff" fontFamily="inherit">
+      <Box maxWidth="1200px" mx="auto" py="10">
+        <Box as="h1" fontSize="2xl" fontWeight="bold" color="#222" mb="8" letterSpacing="-1px">Rooms</Box>
+        <Box as="section">
           {rooms.length === 0 ? (
-            <p style={{fontSize:'1rem',color:'#64748b'}}>No rooms configured.</p>
+            <Box fontSize="md" color="gray.500">No rooms configured.</Box>
           ) : (
-            <div style={{display:'flex',gap:'32px',marginTop:'8px',alignItems:'flex-start'}}>
-              <div style={{flex:1}}>
-                <h3 style={{fontWeight:700,fontSize:'1rem',marginBottom:8,color:'#6366f1'}}>First Floor (1A–1J)</h3>
-                <div style={{display:'grid',gridTemplateColumns:'repeat(2, minmax(160px, 1fr))',gap:'18px'}}>
-                  {rooms.filter(r => /^1[A-J]$/.test(r.number)).map(r => {
-                    const occupant = residents.find(res => (res.room_number === r.number || res.room === r.number));
-                    const isOccupied = r.occupied && occupant;
-                    return (
-                      <div key={r.id} style={{padding:'1rem',background:'#fff',borderRadius:10,boxShadow:'0 2px 8px 0 rgba(60,72,100,0.07)',display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'space-between',minHeight:90,border:isOccupied?'2px solid #34d399':'2px solid #e5e7eb'}}>
-                        <div style={{fontWeight:600,fontSize:'1.08rem',color:'#374151',marginBottom:2}}>{r.number} <span style={{fontSize:'0.98rem',color:'#6366f1',marginLeft:8}}>{r.type}</span></div>
-                        <div style={{fontSize:'0.95rem',color:'#64748b',marginBottom:4}}>Capacity: {r.capacity}</div>
-                        <div style={{fontSize:'0.95rem',color:isOccupied?'#34d399':'#fbbf24',fontWeight:600,marginBottom:4}}>{isOccupied?'Occupied':'Available'}</div>
-                        {isOccupied && (
-                          <div style={{fontSize:'0.95rem',color:'#2563eb',marginBottom:2}}>
-                            <strong>Occupant:</strong> {occupant.name || occupant.first_name + ' ' + occupant.last_name}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div style={{flex:1}}>
-                <h3 style={{fontWeight:700,fontSize:'1rem',marginBottom:8,color:'#6366f1'}}>Second Floor (2A–2J)</h3>
-                <div style={{display:'grid',gridTemplateColumns:'repeat(2, minmax(160px, 1fr))',gap:'18px'}}>
-                  {rooms.filter(r => /^2[A-J]$/.test(r.number)).map(r => {
-                    const occupant = residents.find(res => (res.room_number === r.number || res.room === r.number));
-                    const isOccupied = r.occupied && occupant;
-                    return (
-                      <div key={r.id} style={{padding:'1rem',background:'#fff',borderRadius:10,boxShadow:'0 2px 8px 0 rgba(60,72,100,0.07)',display:'flex',flexDirection:'column',alignItems:'flex-start',justifyContent:'space-between',minHeight:90,border:isOccupied?'2px solid #34d399':'2px solid #e5e7eb'}}>
-                        <div style={{fontWeight:600,fontSize:'1.08rem',color:'#374151',marginBottom:2}}>{r.number} <span style={{fontSize:'0.98rem',color:'#6366f1',marginLeft:8}}>{r.type}</span></div>
-                        <div style={{fontSize:'0.95rem',color:'#64748b',marginBottom:4}}>Capacity: {r.capacity}</div>
-                        <div style={{fontSize:'0.95rem',color:isOccupied?'#34d399':'#fbbf24',fontWeight:600,marginBottom:4}}>{isOccupied?'Occupied':'Available'}</div>
-                        {isOccupied && (
-                          <div style={{fontSize:'0.95rem',color:'#2563eb',marginBottom:2}}>
-                            <strong>Occupant:</strong> {occupant.name || occupant.first_name + ' ' + occupant.last_name}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            <Stack direction="row" gap="8" alignItems="flex-start" mt="2">
+              {["1", "2"].map(floor => (
+                <Box key={floor} flex="1">
+                  <Box as="h3" fontWeight="bold" fontSize="md" mb="2" color="purple.500">
+                    {floor === "1" ? "First Floor (1A–1J)" : "Second Floor (2A–2J)"}
+                  </Box>
+                  <SimpleGrid columns={3} spacing={4}>
+                    {rooms.filter(r => new RegExp(`^${floor}[A-J]$`).test(r.number)).map(r => {
+                      const occupant = residents.find(res => (res.room_number === r.number || res.room === r.number));
+                      const isOccupied = r.occupied && occupant;
+                      return (
+                        <Box
+                          key={r.id}
+                          width="180px"
+                          p="2"
+                          bg="#fff"
+                          borderRadius="md"
+                          boxShadow="sm"
+                          border={isOccupied ? "2px solid #34d399" : "2px solid #e5e7eb"}
+                          display="flex"
+                          flexDirection="column"
+                          alignItems="flex-start"
+                          minHeight="60px"
+                        >
+                          <Stack direction="row" alignItems="center" mb="1">
+                            <Avatar name={isOccupied && occupant ? (occupant.name || (occupant.first_name + ' ' + occupant.last_name)) : r.number} size="sm" />
+                            <Box fontWeight="semibold" fontSize="md" color="gray.700" ml="1">{r.number}</Box>
+                            <Box fontSize="sm" color="purple.500" ml="1">{r.type}</Box>
+                          </Stack>
+                          <Box fontSize="xs" color="gray.500" mb="0.5">Capacity: {r.capacity}</Box>
+                          <Box fontSize="xs" color={isOccupied ? "#34d399" : "#fbbf24"} fontWeight="bold" mb="0.5">{isOccupied ? "Occupied" : "Available"}</Box>
+                          {isOccupied && (
+                            <Box fontSize="xs" color="blue.600" mb="1">
+                              <strong>Occupant:</strong> {occupant.name || (occupant.first_name + ' ' + occupant.last_name)}
+                            </Box>
+                          )}
+                          {!isOccupied && (
+                            <>
+                              <Select
+                                placeholder="Select resident"
+                                size="sm"
+                                mb="1"
+                                value={selectedResident[r.id] || ""}
+                                onChange={e => setSelectedResident(prev => ({ ...prev, [r.id]: e.target.value }))}
+                              >
+                                {residents.filter(res => !res.room_number && !res.room).map(res => (
+                                  <option value={res._id} key={res._id}>
+                                    {res.name || (res.first_name + ' ' + res.last_name)}
+                                  </option>
+                                ))}
+                              </Select>
+                              <Stack direction="row" spacing="1" mt="auto">
+                                <Button
+                                  colorScheme="blue"
+                                  size="sm"
+                                  isLoading={assigning[r.id]}
+                                  onClick={() => handleAssign(r.id, r.number)}
+                                  isDisabled={!selectedResident[r.id]}
+                                >
+                                  Join
+                                </Button>
+                              </Stack>
+                            </>
+                          )}
+                        </Box>
+                      );
+                    })}
+                  </SimpleGrid>
+                </Box>
+              ))}
+            </Stack>
           )}
-        </section>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }
