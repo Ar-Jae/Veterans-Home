@@ -33,8 +33,19 @@ body { background: var(--bg); }
 .hero-left .title-large { font-size: 3.2rem; margin-bottom: 12px; font-weight: 800; color: #222; }
 .hero-left .lead { font-size: 1.2rem; max-width: 460px; color: #444; margin-bottom: 24px; }
 
-.cta { background: #ffd800; color: #0f1724; font-weight: 800; padding: 12px 20px; border-radius: 6px; position: relative; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 1rem; box-shadow: 0 2px 8px rgba(16,24,40,0.04); }
+.cta { background: #ffd800; color: #0f1724; font-weight: 800; padding: 12px 20px; border-radius: 6px; position: relative; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 1rem; box-shadow: 0 2px 8px rgba(16,24,40,0.04); margin-right: 12px; }
 .cta::after { content: '›'; font-weight: 800; margin-left: 6px; }
+
+.cta.secondary {
+  background: transparent;
+  color: var(--brand);
+  border: 2px solid var(--brand);
+}
+
+.cta.secondary:hover {
+  background: var(--brand);
+  color: white;
+}
 
 .social-icons {
   display: flex;
