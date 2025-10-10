@@ -7,6 +7,7 @@ const residents = require('./routes/residents')
 const rooms = require('./routes/rooms')
 const maintenance = require('./routes/maintenance')
 const info = require('./routes/info')
+const payments = require('./routes/payments')
 
 const app = express()
 app.use(cors())
@@ -16,6 +17,7 @@ app.use('/api/residents', residents)
 app.use('/api/rooms', rooms)
 app.use('/api/maintenance', maintenance)
 app.use('/api/info', info)
+app.use('/api/payments', payments)
 
 const PORT = process.env.PORT || 4000
 

@@ -1,6 +1,6 @@
-# mainPage (Standalone Frontend)
+# Honor Haven Veterans Home — mainPage (Standalone Frontend)
 
-This is a standalone React frontend scaffolded with Vite.
+This is the standalone React frontend for the Honor Haven Veterans Home site, scaffolded with Vite.
 
 Quick start
 
@@ -29,16 +29,5 @@ Files of interest
 - `src/main.jsx` — React entry
 - `src/App.jsx` — Example app component
 
-If you want, I can add routing, Tailwind, or copy over components from the `client` folder.
+If you want, I can add Tailwind, copy components from the `client` folder, or wire the frontend to your server API.
 # React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
