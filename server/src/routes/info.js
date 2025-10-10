@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     res.json({
   facilityName: 'Honor Haven Veterans Home',
       description: 'Management System',
-      totalCapacity: 20,
+      totalCapacity: 60,
       floors: 2,
       totalSpace: '10,000 ft²',
       staff: {

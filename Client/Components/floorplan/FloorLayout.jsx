@@ -23,18 +23,20 @@ const CommonArea = ({ room }) => (
 
 const getFloor1Config = (rooms) => {
     const findRoom = (num) => rooms.find(r => r.room_number === `${num}`) || { room_number: `${num}`, occupancy_status: 'vacant' };
+    
+    // Generate 30 bedrooms for floor 1 (rooms 1-30)
+    const bedrooms = [];
+    for (let i = 1; i <= 30; i++) {
+        bedrooms.push({ id: `br${i}`, type: 'Bedroom', room: findRoom(i) });
+    }
+    
     return {
         leftWing: {
-            bedrooms: [
-                { id: 'br5', type: 'Bedroom', room: findRoom(5) },
-                { id: 'br4', type: 'Bedroom', room: findRoom(4) },
-                { id: 'br3', type: 'Bedroom', room: findRoom(3) },
-                { id: 'br2', type: 'Bedroom', room: findRoom(2) },
-                { id: 'br1', type: 'Bedroom', room: findRoom(1) },
-            ],
+            bedrooms: bedrooms.slice(0, 15), // First 15 rooms (1-15)
             bathrooms: [
-                { id: 'bath3', type: 'Bathroom', room: { room_number: 'Bath 3' } },
                 { id: 'bath1', type: 'Bathroom', room: { room_number: 'Bath 1' } },
+                { id: 'bath2', type: 'Bathroom', room: { room_number: 'Bath 2' } },
+                { id: 'bath3', type: 'Bathroom', room: { room_number: 'Bath 3' } },
             ]
         },
         centerTop: [
@@ -49,21 +51,22 @@ const getFloor1Config = (rooms) => {
             bathrooms: [
                 { id: 'bath4', type: 'Bathroom', room: { room_number: 'Bath 4' } },
                 { id: 'bath5', type: 'Bathroom', room: { room_number: 'Bath 5' } },
-                { id: 'bath2', type: 'Bathroom', room: { room_number: 'Bath 2' } },
+                { id: 'bath6', type: 'Bathroom', room: { room_number: 'Bath 6' } },
             ],
-            bedrooms: [
-                { id: 'br10', type: 'Bedroom', room: findRoom(10) },
-                { id: 'br9', type: 'Bedroom', room: findRoom(9) },
-                { id: 'br8', type: 'Bedroom', room: findRoom(8) },
-                { id: 'br7', type: 'Bedroom', room: findRoom(7) },
-                { id: 'br6', type: 'Bedroom', room: findRoom(6) },
-            ],
+            bedrooms: bedrooms.slice(15, 30), // Last 15 rooms (16-30)
         },
     };
 };
 
 const getFloor2Config = (rooms) => {
     const findRoom = (num) => rooms.find(r => r.room_number === `${num}`) || { room_number: `${num}`, occupancy_status: 'vacant' };
+    
+    // Generate 30 bedrooms for floor 2 (rooms 31-60)
+    const bedrooms = [];
+    for (let i = 31; i <= 60; i++) {
+        bedrooms.push({ id: `br${i}`, type: 'Bedroom', room: findRoom(i) });
+    }
+    
     return {
         leftWing: [
             { id: 'counseling', type: 'Office', room: { room_number: 'Counseling' }, className: 'h-40 w-48' },
@@ -71,16 +74,11 @@ const getFloor2Config = (rooms) => {
             { id: 'gym', type: 'Common Area', room: { room_number: 'Gym' }, className: 'h-40 w-48' },
         ],
         centerWing: {
-            bedrooms: [
-                { id: 'br15', type: 'Bedroom', room: findRoom(15) },
-                { id: 'br14', type: 'Bedroom', room: findRoom(14) },
-                { id: 'br13', type: 'Bedroom', room: findRoom(13) },
-                { id: 'br12', type: 'Bedroom', room: findRoom(12) },
-                { id: 'br11', type: 'Bedroom', room: findRoom(11) },
-            ],
+            bedrooms: bedrooms.slice(0, 15), // First 15 rooms (31-45)
             bathrooms: [
+                { id: 'bath7', type: 'Bathroom', room: { room_number: 'Bath 7' } },
                 { id: 'bath8', type: 'Bathroom', room: { room_number: 'Bath 8' } },
-                { id: 'bath6', type: 'Bathroom', room: { room_number: 'Bath 6' } },
+                { id: 'bath9', type: 'Bathroom', room: { room_number: 'Bath 9' } },
             ]
         },
         rightWing: {
@@ -88,20 +86,15 @@ const getFloor2Config = (rooms) => {
                 { id: 'storage', type: 'Utility', room: { room_number: 'Storage' }, className: 'h-32 w-32' },
                 { id: 'lounge2', type: 'Common Area', room: { room_number: 'Lounge' }, className: 'h-40 w-40' },
             ],
-            bedrooms: [
-                { id: 'br20', type: 'Bedroom', room: findRoom(20) },
-                { id: 'br19', type: 'Bedroom', room: findRoom(19) },
-                { id: 'br18', type: 'Bedroom', room: findRoom(18) },
-                { id: 'br17', type: 'Bedroom', room: findRoom(17) },
-                { id: 'br16', type: 'Bedroom', room: findRoom(16) },
-            ],
+            bedrooms: bedrooms.slice(15, 30), // Last 15 rooms (46-60)
             bathrooms: [
-                 { id: 'bath9', type: 'Bathroom', room: { room_number: 'Bath 9' } },
-                 { id: 'bath7', type: 'Bathroom', room: { room_number: 'Bath 7' } },
+                 { id: 'bath10', type: 'Bathroom', room: { room_number: 'Bath 10' } },
+                 { id: 'bath11', type: 'Bathroom', room: { room_number: 'Bath 11' } },
+                 { id: 'bath12', type: 'Bathroom', room: { room_number: 'Bath 12' } },
             ]
         },
         bottomBath: [
-             { id: 'bath10', type: 'Bathroom', room: { room_number: 'Bath 10' } },
+             { id: 'bath13', type: 'Bathroom', room: { room_number: 'Bath 13' } },
         ]
     };
 };
@@ -123,10 +116,10 @@ const Floor1Layout = ({ rooms, residents }) => {
                     {maintenanceRooms.length > 0 && (
                         <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full ml-2">{maintenanceRooms.length} room{maintenanceRooms.length > 1 ? 's' : ''} in maintenance</span>
                     )}
-                    <span className="ml-auto bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">{rooms.filter(r => r.occupied).length}/10 rooms</span>
+                    <span className="ml-auto bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">{rooms.filter(r => r.occupied).length}/30 rooms</span>
                 </div>
                 <div className="w-full h-2 bg-gray-200 rounded mb-4">
-                    <div className="h-2 bg-blue-500 rounded" style={{ width: `${(rooms.filter(r => r.occupied).length / 10) * 100}%` }}></div>
+                    <div className="h-2 bg-blue-500 rounded" style={{ width: `${(rooms.filter(r => r.occupied).length / 30) * 100}%` }}></div>
                 </div>
                 <div className="text-gray-700 font-semibold mb-1">Recent Residents:</div>
                 <div className="flex flex-col gap-1">
@@ -179,10 +172,10 @@ const Floor2Layout = ({ rooms, residents }) => {
                     {maintenanceRooms.length > 0 && (
                         <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full ml-2">{maintenanceRooms.length} room{maintenanceRooms.length > 1 ? 's' : ''} in maintenance</span>
                     )}
-                    <span className="ml-auto bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">{rooms.filter(r => r.occupied).length}/10 rooms</span>
+                    <span className="ml-auto bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">{rooms.filter(r => r.occupied).length}/30 rooms</span>
                 </div>
                 <div className="w-full h-2 bg-gray-200 rounded mb-4">
-                    <div className="h-2 bg-blue-500 rounded" style={{ width: `${(rooms.filter(r => r.occupied).length / 10) * 100}%` }}></div>
+                    <div className="h-2 bg-blue-500 rounded" style={{ width: `${(rooms.filter(r => r.occupied).length / 30) * 100}%` }}></div>
                 </div>
                 <div className="text-gray-700 font-semibold mb-1">Recent Residents:</div>
                 <div className="flex flex-col gap-1">

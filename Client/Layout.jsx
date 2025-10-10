@@ -110,7 +110,7 @@ export default function Layout({ children, currentPageName }) {
           <div style={{ padding: '1.2rem', fontSize: '1rem', background: 'rgba(255,255,255,0.18)', borderRadius: 12, margin: '0 0.5rem', boxShadow: '0 2px 8px 0 rgba(60,72,100,0.10)', color: '#222' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ color: '#222' }}>Total Capacity</span>
-              <span style={{ fontWeight: 800, color: '#222' }}>20 residents</span>
+              <span style={{ fontWeight: 800, color: '#222' }}>60 residents</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
               <span style={{ color: '#222' }}>Floors</span>

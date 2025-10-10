@@ -74,7 +74,7 @@ export default function Sidebar() {
         <Box bg="gray.50" borderRadius="lg" p={4} mb={2} boxShadow="sm">
           <Flex justify="space-between" mb={2}>
             <Text color="gray.600">Total Capacity</Text>
-            <Text fontWeight={800} color="gray.900">20 residents</Text>
+            <Text fontWeight={800} color="gray.900">60 residents</Text>
           </Flex>
           <Flex justify="space-between" mb={2}>
             <Text color="gray.600">Floors</Text>

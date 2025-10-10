@@ -78,10 +78,17 @@ export default function Rooms() {
               {["1", "2"].map(floor => (
                 <Box key={floor} flex="1">
                   <Box as="h3" fontWeight="bold" fontSize="md" mb="2" color="purple.500">
-                    {floor === "1" ? "First Floor (1A–1J)" : "Second Floor (2A–2J)"}
+                    {floor === "1" ? "First Floor (Rooms 1-30)" : "Second Floor (Rooms 31-60)"}
                   </Box>
                   <SimpleGrid columns={3} spacing={4}>
-                    {rooms.filter(r => new RegExp(`^${floor}[A-J]$`).test(r.number)).map(r => {
+                    {rooms.filter(r => {
+                      const roomNum = parseInt(r.number);
+                      if (floor === "1") {
+                        return roomNum >= 1 && roomNum <= 30;
+                      } else {
+                        return roomNum >= 31 && roomNum <= 60;
+                      }
+                    }).map(r => {
                       const occupant = residents.find(res => (res.room_number === r.number || res.room === r.number));
                       const isOccupied = r.occupied && occupant;
                       return (
